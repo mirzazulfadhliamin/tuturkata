@@ -2,391 +2,439 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// FONT SIZES
-figmaFontsize(int fontSize) {
+double figmaFontSize
+    (int fontSize) {
   return fontSize * 1.2;
 }
 
-tsHeadingLargeBold(Color fontColor) {
+TextStyle tsHeadingLargeBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(28),
+    fontSize: figmaFontSize
+      (28),
   );
 }
 
-tsHeadingLargeSemibold(Color fontColor) {
+TextStyle tsHeadingLargeSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(28),
+    fontSize: figmaFontSize
+      (28),
   );
 }
 
-tsHeadingLargeMedium(Color fontColor) {
+TextStyle tsHeadingLargeMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(28),
+    fontSize: figmaFontSize
+      (28),
   );
 }
 
-tsHeadingLargeRegular(Color fontColor) {
+TextStyle tsHeadingLargeRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(28),
+    fontSize: figmaFontSize
+      (28),
   );
 }
 
-tsHeadingMediumBold(Color fontColor) {
+TextStyle tsHeadingMediumBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(26),
+    fontSize: figmaFontSize
+      (26),
   );
 }
 
-tsHeadingMediumSemibold(Color fontColor) {
+TextStyle tsHeadingMediumSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(26),
+    fontSize: figmaFontSize
+      (26),
   );
 }
 
-tsHeadingMediumMedium(Color fontColor) {
+TextStyle tsHeadingMediumMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(26),
+    fontSize: figmaFontSize
+      (26),
   );
 }
 
-tsHeadingMediumRegular(Color fontColor) {
+TextStyle tsHeadingMediumRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(26),
+    fontSize: figmaFontSize
+      (26),
   );
 }
 
-tsHeadingSmallBold(Color fontColor) {
+TextStyle tsHeadingSmallBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(24),
+    fontSize: figmaFontSize
+      (24),
   );
 }
 
-tsHeadingSmallSemibold(Color fontColor) {
+TextStyle tsHeadingSmallSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(24),
+    fontSize: figmaFontSize
+      (24),
   );
 }
 
-tsHeadingSmallMedium(Color fontColor) {
+TextStyle tsHeadingSmallMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(24),
+    fontSize: figmaFontSize
+      (24),
   );
 }
 
-tsHeadingSmallRegular(Color fontColor) {
+TextStyle tsHeadingSmallRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(24),
+    fontSize: figmaFontSize
+      (24),
   );
 }
 
-tsTitleLargeBold(Color fontColor) {
+TextStyle tsTitleLargeBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(22),
+    fontSize: figmaFontSize
+      (22),
   );
 }
 
-tsTitleLargeSemibold(Color fontColor) {
+TextStyle tsTitleLargeSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(22),
+    fontSize: figmaFontSize
+      (22),
   );
 }
 
-tsTitleLargeMedium(Color fontColor) {
+TextStyle tsTitleLargeMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(22),
+    fontSize: figmaFontSize
+      (22),
   );
 }
 
-tsTitleLargeRegular(Color fontColor) {
+TextStyle tsTitleLargeRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(22),
+    fontSize: figmaFontSize
+      (22),
   );
 }
 
-tsTitleMediumBold(Color fontColor) {
+TextStyle tsTitleMediumBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(20),
+    fontSize: figmaFontSize
+      (20),
   );
 }
 
-tsTitleMediumSemibold(Color fontColor) {
+TextStyle tsTitleMediumSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(20),
+    fontSize: figmaFontSize
+      (20),
   );
 }
 
-tsTitleMediumMedium(Color fontColor) {
+TextStyle tsTitleMediumMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(20),
+    fontSize: figmaFontSize
+      (20),
   );
 }
 
-tsTitleMediumRegular(Color fontColor) {
+TextStyle tsTitleMediumRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(20),
+    fontSize: figmaFontSize
+      (20),
   );
 }
 
-tsTitleSmallBold(Color fontColor) {
+TextStyle tsTitleSmallBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(18),
+    fontSize: figmaFontSize
+      (18),
   );
 }
 
-tsTitleSmallSemibold(Color fontColor) {
+TextStyle tsTitleSmallSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(18),
+    fontSize: figmaFontSize
+      (18),
   );
 }
 
-tsTitleSmallMedium(Color fontColor) {
+TextStyle tsTitleSmallMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(18),
+    fontSize: figmaFontSize
+      (18),
   );
 }
 
-tsTitleSmallRegular(Color fontColor) {
+TextStyle tsTitleSmallRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(18),
+    fontSize: figmaFontSize
+      (18),
   );
 }
 
-tsBodyLargeBold(Color fontColor) {
+TextStyle tsBodyLargeBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(16),
+    fontSize: figmaFontSize
+      (16),
   );
 }
 
-tsBodyLargeSemibold(Color fontColor) {
+TextStyle tsBodyLargeSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(16),
+    fontSize: figmaFontSize
+      (16),
   );
 }
 
-tsBodyLargeMedium(Color fontColor) {
+TextStyle tsBodyLargeMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(16),
+    fontSize: figmaFontSize
+      (16),
   );
 }
 
-tsBodyLargeRegular(Color fontColor) {
+TextStyle tsBodyLargeRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(16),
+    fontSize: figmaFontSize
+      (16),
   );
 }
 
-tsBodyMediumBold(Color fontColor) {
+TextStyle tsBodyMediumBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(14),
+    fontSize: figmaFontSize
+      (14),
   );
 }
 
-tsBodyMediumSemibold(Color fontColor) {
+TextStyle tsBodyMediumSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(14),
+    fontSize: figmaFontSize
+      (14),
   );
 }
 
-tsBodyMediumMedium(Color fontColor) {
+TextStyle tsBodyMediumMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(14),
+    fontSize: figmaFontSize
+      (14),
   );
 }
 
-tsBodyMediumRegular(Color fontColor) {
+TextStyle tsBodyMediumRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(14),
+    fontSize: figmaFontSize
+      (14),
   );
 }
 
-tsBodySmallBold(Color fontColor) {
+TextStyle tsBodySmallBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(12),
+    fontSize: figmaFontSize
+      (12),
   );
 }
 
-tsBodySmallSemibold(Color fontColor) {
+TextStyle tsBodySmallSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(12),
+    fontSize: figmaFontSize
+      (12),
   );
 }
 
-tsBodySmallMedium(Color fontColor) {
+TextStyle tsBodySmallMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(12),
+    fontSize: figmaFontSize
+      (12),
   );
 }
 
-tsBodySmallRegular(Color fontColor) {
+TextStyle tsBodySmallRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(12),
+    fontSize: figmaFontSize
+      (12),
   );
 }
 
-tsLabelLargeBold(Color fontColor) {
+TextStyle tsLabelLargeBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(10),
+    fontSize: figmaFontSize
+      (10),
   );
 }
 
-tsLabelLargeSemibold(Color fontColor) {
+TextStyle tsLabelLargeSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(10),
+    fontSize: figmaFontSize
+      (10),
   );
 }
 
-tsLabelLargeMedium(Color fontColor) {
+TextStyle tsLabelLargeMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(10),
+    fontSize: figmaFontSize
+      (10),
   );
 }
 
-tsLabelLargeRegular(Color fontColor) {
+TextStyle tsLabelLargeRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(10),
+    fontSize: figmaFontSize
+      (10),
   );
 }
 
-tsLabelMediumBold(Color fontColor) {
+TextStyle tsLabelMediumBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(8),
+    fontSize: figmaFontSize
+      (8),
   );
 }
 
-tsLabelMediumSemibold(Color fontColor) {
+TextStyle tsLabelMediumSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(8),
+    fontSize: figmaFontSize
+      (8),
   );
 }
 
-tsLabelMediumMedium(Color fontColor) {
+TextStyle tsLabelMediumMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(8),
+    fontSize: figmaFontSize
+      (8),
   );
 }
 
-tsLabelMediumRegular(Color fontColor) {
+TextStyle tsLabelMediumRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(8),
+    fontSize: figmaFontSize
+      (8),
   );
 }
 
-tsLabelSmallBold(Color fontColor) {
+TextStyle tsLabelSmallBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w700,
-    fontSize: figmaFontsize(5),
+    fontSize: figmaFontSize
+      (5),
   );
 }
 
-tsLabelSmallSemibold(Color fontColor) {
+TextStyle tsLabelSmallSemiBold(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w600,
-    fontSize: figmaFontsize(5),
+    fontSize: figmaFontSize
+      (5),
   );
 }
 
-tsLabelSmallMedium(Color fontColor) {
+TextStyle tsLabelSmallMedium(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w500,
-    fontSize: figmaFontsize(5),
+    fontSize: figmaFontSize
+      (5),
   );
 }
 
-tsLabelSmallRegular(Color fontColor) {
+TextStyle tsLabelSmallRegular(Color fontColor) {
   return GoogleFonts.poppins(
     color: fontColor,
     fontWeight: FontWeight.w400,
-    fontSize: figmaFontsize(5),
+    fontSize: figmaFontSize
+      (5),
   );
 }

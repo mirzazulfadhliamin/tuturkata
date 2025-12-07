@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'core/bloc/test.dart';
+
+import 'core/route/app_route.dart';
+import 'feature/home/presentation/bloc/home_bloc.dart';
+import 'injection_container.dart' as di;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<ExampleBloc>()),
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: "Flutter BLoC Setup",
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: AppRoute().onGenerateRoute,
+        initialRoute: "/",
+      ),
+    );
+  }
+}
+
+
+

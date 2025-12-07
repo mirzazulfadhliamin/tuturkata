@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../../../../core/theme/color_styles.dart';
+import '../../../../../core/theme/text_styles.dart';
 
 class WeeklyChallengeCard extends StatelessWidget {
   final int progress;
@@ -22,21 +26,17 @@ class WeeklyChallengeCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFAC46FF), Color(0xFF980FFA)],
-        ),
+        gradient: AppColor.gradientDiagonal(AppColor.purpleLight, AppColor.purpleDark),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0x19000000),
+            color: AppColor.shadow,
             blurRadius: 6,
             offset: const Offset(0, 4),
             spreadRadius: -4,
           ),
           BoxShadow(
-            color: const Color(0x19000000),
+            color: AppColor.shadowMedium,
             blurRadius: 15,
             offset: const Offset(0, 10),
             spreadRadius: -3,
@@ -46,53 +46,51 @@ class WeeklyChallengeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// HEADER
           Row(
             children: [
               Container(
                 width: 50,
                 height: 53,
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: AppColor.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
-                  CupertinoIcons.rosette,
-                  color: Colors.white,
-                  size: 24,
+                child: SvgPicture.asset(
+                  'assets/svg/trophy.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    AppColor.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Tantangan Minggu Ini',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
-                      ),
+                      style: tsBodyMediumRegular(AppColor.white),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Selesaikan $total latihan dalam seminggu',
-                      style: const TextStyle(
-                        color: Color(0xCCFFFEFE),
-                        fontSize: 16,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
-                      ),
+                      style: tsBodyMediumRegular(AppColor.silver),
                     ),
                   ],
                 ),
               ),
             ],
           ),
+
           const SizedBox(height: 20),
+
+          /// PROGRESS
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,31 +99,21 @@ class WeeklyChallengeCard extends StatelessWidget {
                 children: [
                   Text(
                     '$progress/$total latihan',
-                    style: const TextStyle(
-                      color: Color(0xE5FFFEFE),
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                    ),
+                    style: tsBodyMediumRegular(AppColor.white),
                   ),
                   Text(
                     '$daysLeft hari lagi',
-                    style: const TextStyle(
-                      color: Color(0xE5FFFEFE),
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                    ),
+                    style: tsBodyMediumRegular(AppColor.white),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
+
+              /// PROGRESS BAR
               Container(
                 height: 12,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: AppColor.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: FractionallySizedBox(
@@ -133,48 +121,41 @@ class WeeklyChallengeCard extends StatelessWidget {
                   widthFactor: percentage,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColor.white,
                       borderRadius: BorderRadius.circular(6),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x19000000),
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                          spreadRadius: 0,
-                        ),
-                      ],
                     ),
                   ),
                 ),
               ),
             ],
           ),
+
           const SizedBox(height: 20),
+
+          /// XP REWARD
           Container(
             height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: AppColor.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  CupertinoIcons.star_fill,
-                  color: Colors.white,
-                  size: 20,
+                SvgPicture.asset(
+                  'assets/svg/giftBox.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    AppColor.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 const SizedBox(width: 5),
                 Text(
                   '+$xpReward XP',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    height: 1.5,
-                  ),
+                  style: tsBodyMediumRegular(AppColor.white),
                 ),
               ],
             ),

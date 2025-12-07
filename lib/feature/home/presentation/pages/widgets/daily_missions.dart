@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../../../../core/theme/color_styles.dart';
+import '../../../../../core/theme/text_styles.dart';
 
 class MissionItem {
   final String title;
@@ -6,7 +11,6 @@ class MissionItem {
   final int current;
   final int total;
   final bool completed;
-  final Color progressColor;
 
   const MissionItem({
     required this.title,
@@ -14,7 +18,6 @@ class MissionItem {
     required this.current,
     required this.total,
     required this.completed,
-    this.progressColor = const Color(0xFF40E0D0),
   });
 }
 
@@ -35,10 +38,13 @@ class DailyMissions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _DailyMissionHeader(completedCount: completedCount, totalCount: totalCount),
+        _DailyMissionHeader(
+          completedCount: completedCount,
+          totalCount: totalCount,
+        ),
         const SizedBox(height: 16),
         Column(
-          children: missions.map((mission) => MissionCard(mission)).toList(),
+          children: missions.map((m) => MissionCard(mission: m)).toList(),
         ),
       ],
     );
@@ -62,23 +68,14 @@ class _DailyMissionHeader extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Misi Harian',
-              style: TextStyle(
-                color: Color(0xFF101727),
-                fontSize: 18,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
-              ),
+              style: tsTitleSmallRegular(AppColor.textPrimary),
             ),
             const SizedBox(height: 4),
             Text(
               '$completedCount/$totalCount selesai',
-              style: const TextStyle(
-                color: Color(0xFF697282),
-                fontSize: 16,
-                fontFamily: 'Poppins',
-              ),
+              style: tsBodyMediumRegular(AppColor.textSecondary),
             ),
           ],
         ),
@@ -94,24 +91,24 @@ class _XpBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFFEF9C2),
+        color: AppColor.yellowSoft,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(
-            Icons.star,
-            color: Color(0xFFD08700),
-            size: 18,
+          SvgPicture.asset(
+            'assets/svg/giftBox.svg',
+            width: 24,
+            height: 24,
+            colorFilter: ColorFilter.mode(
+              AppColor.amberDark,
+              BlendMode.srcIn,
+            ),
           ),
-          SizedBox(width: 5),
+          const SizedBox(width: 6),
           Text(
             '+50 XP',
-            style: TextStyle(
-              color: Color(0xFFD08700),
-              fontSize: 16,
-              fontFamily: 'Poppins',
-            ),
+            style: tsBodySmallMedium(AppColor.amberDark),
           ),
         ],
       ),
@@ -122,7 +119,7 @@ class _XpBadge extends StatelessWidget {
 class MissionCard extends StatelessWidget {
   final MissionItem mission;
 
-  const MissionCard(this.mission, {super.key});
+  const MissionCard({required this.mission, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,11 +130,11 @@ class MissionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColor.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           width: 2,
-          color: isDone ? const Color(0xFFB8F7CF) : const Color(0xFFF2F4F6),
+          color: isDone ? AppColor.green.withOpacity(0.5): AppColor.border,
         ),
       ),
       child: Column(
@@ -146,7 +143,7 @@ class MissionCard extends StatelessWidget {
           _MissionRow(mission: mission, isDone: isDone),
           if (!isDone) ...[
             const SizedBox(height: 12),
-            _ProgressBar(progress: progress, color: mission.progressColor),
+            _ProgressBar(progress: progress),
           ],
         ],
       ),
@@ -165,8 +162,11 @@ class _MissionRow extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          isDone ? Icons.check_circle : Icons.circle_outlined,
-          color: isDone ? Colors.green : const Color(0xFF697282),
+          isDone
+              ? CupertinoIcons.check_mark_circled
+              : CupertinoIcons.circle,
+          color: isDone ? AppColor.success : AppColor.grayLight,
+          size: 24,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -175,21 +175,16 @@ class _MissionRow extends StatelessWidget {
             children: [
               Text(
                 mission.title,
-                style: TextStyle(
-                  color: const Color(0xFF101727),
-                  fontSize: 16,
-                  fontFamily: 'Poppins',
+                style: tsBodyMediumRegular(
+                  isDone ? AppColor.textSecondary : AppColor.textPrimary,
+                ).copyWith(
                   decoration: isDone ? TextDecoration.lineThrough : null,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 mission.progress,
-                style: const TextStyle(
-                  color: Color(0xFF697282),
-                  fontSize: 16,
-                  fontFamily: 'Poppins',
-                ),
+                style: tsBodyMediumRegular(AppColor.textSecondary),
               ),
             ],
           ),
@@ -204,18 +199,14 @@ class _DoneBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCFCE7),
+        color: AppColor.successTransparent,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: const Text(
+      child: Text(
         'Selesai',
-        style: TextStyle(
-          color: Color(0xFF008235),
-          fontSize: 16,
-          fontFamily: 'Poppins',
-        ),
+        style: tsBodySmallMedium(AppColor.greenDark),
       ),
     );
   }
@@ -223,16 +214,15 @@ class _DoneBadge extends StatelessWidget {
 
 class _ProgressBar extends StatelessWidget {
   final double progress;
-  final Color color;
 
-  const _ProgressBar({required this.progress, required this.color});
+  const _ProgressBar({required this.progress});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 8,
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
+        color: AppColor.grayLight,
         borderRadius: BorderRadius.circular(4),
       ),
       child: FractionallySizedBox(
@@ -240,7 +230,7 @@ class _ProgressBar extends StatelessWidget {
         widthFactor: progress,
         child: Container(
           decoration: BoxDecoration(
-            color: color,
+            color: AppColor.primary,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

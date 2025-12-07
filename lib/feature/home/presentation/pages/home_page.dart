@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/svg.dart';
+
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/continue_learning_card.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/daily_missions.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/home_header.dart';
@@ -8,6 +10,7 @@ import 'package:tutur_kata/feature/home/presentation/pages/widgets/loading_simme
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/stats_card.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/weekly_challenge_card.dart';
 
+import '../../../../../core/theme/color_styles.dart';
 import '../bloc/home_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,8 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Load data saat pertama kali dibuka
-    context.read<HomeBloc>().add( LoadHomeData());
+    context.read<HomeBloc>().add(LoadHomeData());
   }
 
   @override
@@ -30,11 +32,11 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: const Color(0xFFF7F7FC),
+          backgroundColor: AppColor.background,  // ✔ pakai theme
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
-                context.read<HomeBloc>().add( LoadHomeData());
+                context.read<HomeBloc>().add(LoadHomeData());
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -65,9 +67,7 @@ class _HomePageState extends State<HomePage> {
           ContinueLearningCard(
             title: 'Lanjutkan Belajar',
             subtitle: 'Membaca Kata - Level 3',
-            onTap: () {
-              // Navigate to learning page
-            },
+            onTap: () {},
           ),
           const SizedBox(height: 30),
 
@@ -76,37 +76,70 @@ class _HomePageState extends State<HomePage> {
               StatItem(
                 title: 'Streak',
                 value: '${state.streakDays}',
-                startColor: const Color(0xFFFF8803),
-                endColor: const Color(0xFFFF6800),
-                icon: CupertinoIcons.flame_fill,
+                startColor: AppColor.orangeLight,
+                endColor: AppColor.orangeDark,
+                icon: SvgPicture.asset(
+                  'assets/svg/streak.svg',
+                  width: 28,
+                  height: 28,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 label: 'Hari Berturut',
               ),
               StatItem(
                 title: 'XP',
                 value: '${state.totalXP}',
-                startColor: const Color(0xFFAD46FF),
-                endColor: const Color(0xFF9810FA),
-                icon: CupertinoIcons.star_fill,
+                startColor: AppColor.purpleLight,
+                endColor: AppColor.purpleDark,
+                icon:SvgPicture.asset(
+                  'assets/svg/trophy.svg',
+                  width: 28,
+                  height: 28,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 label: 'Total XP',
               ),
               StatItem(
                 title: 'Sessions',
                 value: '${state.completedSessions}',
-                startColor: const Color(0xFF00C850),
-                endColor: const Color(0xFF00A63D),
-                icon: CupertinoIcons.check_mark_circled_solid,
+                startColor: AppColor.greenLight,
+                endColor: AppColor.greenDark,
+                icon: SvgPicture.asset(
+                  'assets/svg/message.svg',
+                  width: 28,
+                  height: 28,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 label: 'Sesi Selesai',
               ),
               StatItem(
                 title: 'Accuracy',
                 value: '${state.accuracy}%',
-                startColor: const Color(0xFF2B7FFF),
-                endColor: const Color(0xFF155CFB),
-                icon: CupertinoIcons.chart_bar_alt_fill,
+                startColor: AppColor.blueLight,
+                endColor: AppColor.blueDark,
+                icon: SvgPicture.asset(
+                  'assets/svg/circle.svg',
+                  width: 28,
+                  height: 28,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 label: 'Akurasi',
               ),
             ],
           ),
+
           const SizedBox(height: 30),
 
           DailyMissions(
@@ -136,6 +169,7 @@ class _HomePageState extends State<HomePage> {
             completedCount: state.completedDailyMissions,
             totalCount: state.totalDailyMissions,
           ),
+
           const SizedBox(height: 30),
 
           WeeklyChallengeCard(
@@ -143,12 +177,12 @@ class _HomePageState extends State<HomePage> {
             total: state.weeklyChallengeTotal,
             daysLeft: state.daysLeftInWeek,
           ),
+
           const SizedBox(height: 30),
         ],
       );
     }
 
-    // Initial state
     return const LoadingShimmer();
   }
 }

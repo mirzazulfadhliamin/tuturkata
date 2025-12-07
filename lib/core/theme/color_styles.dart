@@ -4,6 +4,8 @@ class AppColor {
   // ========== PRIMARY COLORS ==========
   static const primary = Color(0xFF2DD4BF);
   static const primaryLight = Color(0xFFCCFBF1);
+  static const primaryMedium = Color(0xFF30C0B0);
+  static const primaryBright = Color(0xFF40E0D0);
   static const primaryDark = Color(0xFF0F766E);
 
   // ========== BASE COLORS ==========
@@ -32,6 +34,16 @@ class AppColor {
   static const pink = Color(0xFFEC4899);
   static const red = Color(0xFFDC2626);
   static const yellow = Color(0xFFF59E0B);
+  static const orangeLight = Color(0xFFFF8803);
+  static const orangeDark = Color(0xFFFF6800);
+  static const purpleLight = Color(0xFFAD46FF);
+  static const purpleDark = Color(0xFF9810FA);
+  static const greenLight = Color(0xFF00C850);
+  static const greenDark = Color(0xFF00A63D);
+  static const blueLight = Color(0xFF2B7FFF);
+  static const blueDark = Color(0xFF155CFB);
+  static const amberDark = Color(0xFFD08700);
+  static const yellowSoft = Color(0xFFFEF9C2);
 
   // ========== TEXT COLORS ==========
   static const textPrimary = Color(0xFF1C1F28);

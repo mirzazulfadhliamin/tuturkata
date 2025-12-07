@@ -49,7 +49,7 @@ class StatsCard extends StatelessWidget {
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2000),
-                    lastDate: DateTime(2100), 
+                    lastDate: DateTime(2100),
                   );
 
                   if (pickedDate != null) {

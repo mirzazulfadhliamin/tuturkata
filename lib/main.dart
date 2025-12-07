@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/bloc/test.dart';
 
 import 'core/route/app_route.dart';
+import 'core/theme/app_theme.dart';
 import 'feature/home/presentation/bloc/home_bloc.dart';
 import 'injection_container.dart' as di;
 
@@ -28,10 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: "Flutter BLoC Setup",
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-        ),
+        theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
         onGenerateRoute: AppRoute().onGenerateRoute,
         initialRoute: "/",

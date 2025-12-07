@@ -1,179 +1,426 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pantrikita/core/route/navigator.dart';
-import 'package:pantrikita/core/theme/color_value.dart';
-import 'package:pantrikita/core/theme/text_style.dart';
-import 'package:pantrikita/core/util/validator/validator.dart';
-import 'package:pantrikita/core/widgets/button.dart';
-import 'package:pantrikita/core/widgets/custom_textformfield.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-import '../bloc/register_bloc.dart';
+import '../../../../core/theme/color_styles.dart';
+import '../../../../core/theme/text_styles.dart';
 import 'login_page.dart';
 
-class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
-  final GlobalKey<FormState> keyformRegister = GlobalKey<FormState>();
-  final TextEditingController ctrEmail = TextEditingController();
-  final TextEditingController ctrUsername = TextEditingController();
-  final TextEditingController ctrPassword = TextEditingController();
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _handleRegister() {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registrasi berhasil!'),
+            backgroundColor: AppColor.success,
+          ),
+        );
+
+        Navigator.pop(context);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: ColorValue.backgroundColor,
+      backgroundColor: AppColor.white,
       body: SafeArea(
-        child: Container(
-          width: screenWidth,
-          margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
-            key: keyformRegister,
-            child: Stack(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 50),
-                      Text(
-                        "Register",
-                        style: tsHeadingLargeBold(ColorValue.black),
-                      ),
-                      Text(
-                        "Create a new account to continue!",
-                        style: tsBodySmallMedium(ColorValue.grayDark),
-                      ),
-
-                      const SizedBox(height: 120),
-
-                      Text(
-                        "Username",
-                        style: tsBodyMediumMedium(ColorValue.grayDark),
-                      ),
-                      const SizedBox(height: 10),
-                      CustomTextFormField(
-                        label: "Enter your username",
-                        controller: ctrUsername,
-                        textInputType: TextInputType.text,
-                        validator: (value) => Validator.emptyValidator(
-                          value: value,
-                          message: "Username harus di isi",
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Email",
-                        style: tsBodyMediumMedium(ColorValue.grayDark),
-                      ),
-                      const SizedBox(height: 10),
-                      CustomTextFormField(
-                        label: "example@gmail.com",
-                        controller: ctrEmail,
-                        textInputType: TextInputType.text,
-                        validator: (value) => Validator.emailValidator(value),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "Password",
-                        style: tsBodyMediumMedium(ColorValue.grayDark),
-                      ),
-                      const SizedBox(height: 10),
-                      CustomTextFormField(
-                        label: "Enter your password",
-                        controller: ctrPassword,
-                        textInputType: TextInputType.text,
-                        validator: (value) => Validator.emptyValidator(
-                          value: value,
-                          message: "Password harus di isi",
-                        ),
-                        isPassword: true,
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      BlocConsumer<RegisterBloc, RegisterState>(
-                        listener: (context, state) {
-                          if (state is RegisterSuccess) {
-                            navigatorPushAndRemoveAll(context, LoginPage());
-                          } else if (state is RegisterFailure) {
-                            showTopSnackBar(
-                              Overlay.of(context),
-                              CustomSnackBar.error(message: state.message),
-                            );
-                          }
-                        },
-                        builder: (context, state) {
-                          return MyButton(
-                            widget: state is RegisterLoading
-                                ? const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
-                                : Text(
-                                    "Register",
-                                    style: tsBodyMediumMedium(
-                                      ColorValue.whiteColor,
-                                    ),
-                                  ),
-                            onPressed: () {
-                              if (keyformRegister.currentState!.validate()) {
-                                context.read<RegisterBloc>().add(
-                                  GetRegisterEvent(
-                                    email: ctrEmail.text,
-                                    password: ctrPassword.text,
-                                    username: ctrUsername.text,
-                                  ),
-                                );
-                              }
-                            },
-                            height: 50,
-                            colorbtn: WidgetStateProperty.all<Color>(
-                              ColorValue.primary,
-                            ),
-                            width: double.infinity,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already have an account?",
-                          style: tsBodySmallMedium(ColorValue.grayDark),
-                        ),
-                        SizedBox(width: 5),
-                        InkWell(
-                          onTap: () =>
-                          {
-
-
-                            navigatorReplacement(context, LoginPage())
-
-                          },
-                          child: Text(
-                            "Login",
-                            style: tsBodySmallMedium(ColorValue.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 60),
+                _buildHeader(),
+                const SizedBox(height: 60),
+                _buildNameField(),
+                const SizedBox(height: 20),
+                _buildEmailField(),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 20),
+                _buildConfirmPasswordField(),
+                const SizedBox(height: 32),
+                _buildRegisterButton(),
+                const SizedBox(height: 24),
+                _buildLoginLink(),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Text(
+          'Tuturkata',
+          style: tsHeadingLargeBold(AppColor.primary),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Mulai perjalanan terapi bicaramu',
+          textAlign: TextAlign.center,
+          style: tsBodyMediumRegular(AppColor.textSecondary),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Nama Lengkap',
+          style: tsBodyMediumMedium(AppColor.textSecondary),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _nameController,
+          keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+            hintText: 'Aisyah Aisyara Putri',
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.person_outline, color: AppColor.gray),
+            filled: true,
+            fillColor: AppColor.silver,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Nama tidak boleh kosong';
+            }
+            if (value.length < 3) {
+              return 'Nama minimal 3 karakter';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmailField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Email',
+          style: tsBodyMediumMedium(AppColor.textSecondary),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            hintText: 'aisyah@email.com',
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.email_outlined, color: AppColor.gray),
+            filled: true,
+            fillColor: AppColor.silver,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Email tidak boleh kosong';
+            }
+            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              return 'Format email tidak valid';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Password',
+          style: tsBodyMediumMedium(AppColor.textSecondary),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _passwordController,
+          obscureText: !_isPasswordVisible,
+          decoration: InputDecoration(
+            hintText: 'Minimal 8 karakter',
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: AppColor.gray,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              },
+            ),
+            filled: true,
+            fillColor: AppColor.silver,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Password tidak boleh kosong';
+            }
+            if (value.length < 8) {
+              return 'Password minimal 8 karakter';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Konfirmasi Password',
+          style: tsBodyMediumMedium(AppColor.textSecondary),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _confirmPasswordController,
+          obscureText: !_isConfirmPasswordVisible,
+          decoration: InputDecoration(
+            hintText: 'Ulangi password',
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isConfirmPasswordVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: AppColor.gray,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                });
+              },
+            ),
+            filled: true,
+            fillColor: AppColor.silver,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Konfirmasi password tidak boleh kosong';
+            }
+            if (value != _passwordController.text) {
+              return 'Password tidak cocok';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return ElevatedButton(
+      onPressed: _isLoading ? null : _handleRegister,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.primary,
+        foregroundColor: AppColor.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 0,
+        disabledBackgroundColor: AppColor.disabledButton,
+      ),
+      child: _isLoading
+          ? SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
+        ),
+      )
+          : Text(
+        'Daftar',
+        style: tsBodyLargeSemiBold(AppColor.white),
+      ),
+    );
+  }
+
+  Widget _buildLoginLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Sudah punya akun? ',
+          style: tsBodyMediumRegular(AppColor.textSecondary),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(0, 0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              'Masuk',
+              style: tsBodyMediumSemiBold(AppColor.primary),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

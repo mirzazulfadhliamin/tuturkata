@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Import sesuaikan dengan struktur project Anda
-// import 'package:tuturkata/core/theme/app_colors.dart';
-// import 'package:tuturkata/core/theme/app_text_styles.dart';
-// import 'package:tuturkata/core/utils/validators.dart';
-// import 'package:tuturkata/core/widgets/custom_text_field.dart';
-// import 'package:tuturkata/core/widgets/primary_button.dart';
-// import 'package:tuturkata/features/auth/presentation/bloc/login_bloc.dart';
+import '../../../../core/theme/color_styles.dart';
+import '../../../../core/theme/text_styles.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,74 +27,47 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      context.read<LoginBloc>().add(
-        LoginSubmitted(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        ),
-      );
+      setState(() => _isLoading = true);
+
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login berhasil!'),
+            backgroundColor: AppColor.success,
+          ),
+        );
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.white,
       body: SafeArea(
-        child: BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
-            if (state is LoginSuccess) {
-              // Navigate to home
-              Navigator.pushReplacementNamed(context, '/home');
-            } else if (state is LoginFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 60),
-
-                  // Logo & Title
-                  _buildHeader(),
-
-                  const SizedBox(height: 60),
-
-                  // Email Field
-                  _buildEmailField(),
-
-                  const SizedBox(height: 20),
-
-                  // Password Field
-                  _buildPasswordField(),
-
-                  const SizedBox(height: 12),
-
-                  // Forgot Password
-                  _buildForgotPassword(),
-
-                  const SizedBox(height: 32),
-
-                  // Login Button
-                  _buildLoginButton(),
-
-                  const SizedBox(height: 24),
-
-                  // Register Link
-                  _buildRegisterLink(),
-
-                  const SizedBox(height: 24),
-                ],
-              ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 60),
+                _buildHeader(),
+                const SizedBox(height: 60),
+                _buildEmailField(),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 12),
+                _buildForgotPassword(),
+                const SizedBox(height: 32),
+                _buildLoginButton(),
+                const SizedBox(height: 24),
+                _buildRegisterLink(),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ),
@@ -109,27 +78,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildHeader() {
     return Column(
       children: [
-        // Logo
         Text(
           'Tuturkata',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF2DD4BF),
-            letterSpacing: -0.5,
-          ),
+          style: tsHeadingLargeBold(AppColor.primary),
         ),
         const SizedBox(height: 12),
-
-        // Subtitle
         Text(
           'Tingkatkan kelancaran bicaramu\nbersama Tuturkata',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            height: 1.5,
-          ),
+          style: tsBodyMediumRegular(AppColor.textSecondary),
         ),
       ],
     );
@@ -141,11 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Text(
           'Email',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[700],
-          ),
+          style: tsBodyMediumMedium(AppColor.textSecondary),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -153,25 +106,29 @@ class _LoginPageState extends State<LoginPage> {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'aisyah@email.com',
-            hintStyle: TextStyle(color: Colors.grey[400]),
-            prefixIcon: Icon(Icons.email_outlined, color: Colors.grey[400]),
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.email_outlined, color: AppColor.gray),
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: AppColor.silver,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: BorderSide(color: AppColor.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: BorderSide(color: AppColor.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2DD4BF), width: 2),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -198,11 +155,7 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Text(
           'Password',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[700],
-          ),
+          style: tsBodyMediumMedium(AppColor.textSecondary),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -210,12 +163,14 @@ class _LoginPageState extends State<LoginPage> {
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             hintText: '••••••••',
-            hintStyle: TextStyle(color: Colors.grey[400]),
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[400]),
+            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
             suffixIcon: IconButton(
               icon: Icon(
-                _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                color: Colors.grey[400],
+                _isPasswordVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: AppColor.gray,
               ),
               onPressed: () {
                 setState(() {
@@ -224,22 +179,26 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: AppColor.silver,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: BorderSide(color: AppColor.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: BorderSide(color: AppColor.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2DD4BF), width: 2),
+              borderSide: BorderSide(color: AppColor.borderFocus, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
+              borderSide: BorderSide(color: AppColor.borderError),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColor.borderError, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -265,61 +224,47 @@ class _LoginPageState extends State<LoginPage> {
       alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
-          // Navigate to forgot password
-          Navigator.pushNamed(context, '/forgot-password');
+          // TODO: Navigate to forgot password
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           minimumSize: const Size(0, 0),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
-        child: const Text(
+        child: Text(
           'Lupa Password?',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF2DD4BF),
-            fontWeight: FontWeight.w500,
-          ),
+          style: tsBodyMediumMedium(AppColor.primary),
         ),
       ),
     );
   }
 
   Widget _buildLoginButton() {
-    return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
-        final isLoading = state is LoginLoading;
-
-        return ElevatedButton(
-          onPressed: isLoading ? null : _handleLogin,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF2DD4BF),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 0,
-            disabledBackgroundColor: const Color(0xFF2DD4BF).withOpacity(0.6),
-          ),
-          child: isLoading
-              ? const SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          )
-              : const Text(
-            'Masuk',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        );
-      },
+    return ElevatedButton(
+      onPressed: _isLoading ? null : _handleLogin,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.primary,
+        foregroundColor: AppColor.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 0,
+        disabledBackgroundColor: AppColor.disabledButton,
+      ),
+      child: _isLoading
+          ? SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
+        ),
+      )
+          : Text(
+        'Masuk',
+        style: tsBodyLargeSemiBold(AppColor.white),
+      ),
     );
   }
 
@@ -329,94 +274,26 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Text(
           'Belum punya akun? ',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
+          style: tsBodyMediumRegular(AppColor.textSecondary),
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/register');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RegisterPage()),
+            );
           },
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: const Size(0, 0),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          child: const Text(
+          child: Text(
             'Daftar',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF2DD4BF),
-              fontWeight: FontWeight.w600,
-            ),
+            style: tsBodyMediumSemiBold(AppColor.primary),
           ),
         ),
       ],
     );
-  }
-}
-
-// ===== BLOC FILES =====
-
-// login_event.dart
-abstract class LoginEvent {}
-
-class LoginSubmitted extends LoginEvent {
-  final String email;
-  final String password;
-
-  LoginSubmitted({required this.email, required this.password});
-}
-
-// login_state.dart
-abstract class LoginState {}
-
-class LoginInitial extends LoginState {}
-
-class LoginLoading extends LoginState {}
-
-class LoginSuccess extends LoginState {
-  final String token;
-
-  LoginSuccess({required this.token});
-}
-
-class LoginFailure extends LoginState {
-  final String message;
-
-  LoginFailure({required this.message});
-}
-
-// login_bloc.dart
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  // final AuthRepository authRepository;
-
-  LoginBloc() : super(LoginInitial()) {
-    on<LoginSubmitted>(_onLoginSubmitted);
-  }
-
-  Future<void> _onLoginSubmitted(
-      LoginSubmitted event,
-      Emitter<LoginState> emit,
-      ) async {
-    emit(LoginLoading());
-
-    try {
-      // Simulasi API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      // Call repository
-      // final result = await authRepository.login(
-      //   email: event.email,
-      //   password: event.password,
-      // );
-
-      // Contoh response
-      emit(LoginSuccess(token: 'dummy_token'));
-
-    } catch (e) {
-      emit(LoginFailure(message: 'Email atau password salah'));
-    }
   }
 }

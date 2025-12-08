@@ -3,6 +3,7 @@ import 'package:tutur_kata/feature/Profile/presentation/pages/profile.dart';
 import 'package:tutur_kata/feature/auth/presentation/pages/login_page.dart';
 import 'package:tutur_kata/feature/exercise/presentation/pages/exercise_complete.dart';
 import 'package:tutur_kata/feature/progress/presentation/pages/progress.dart';
+import '../../feature/auth/presentation/pages/login_page.dart';
 import '../../feature/exercise/presentation/pages/exercise_page.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
 

@@ -7,7 +7,7 @@ class AppRoute {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
-          builder: (_) => const ExercisePage(categoryName: 'lalala', level: 4,),
+          builder: (_) => const ExercisePage(categoryName: '', level: 4,),
         );
 
       default:

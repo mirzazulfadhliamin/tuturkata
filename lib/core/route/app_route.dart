@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../feature/auth/presentation/pages/login_page.dart';
 import '../../feature/exercise/presentation/pages/exercise_page.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
 
@@ -7,7 +8,7 @@ class AppRoute {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
-          builder: (_) => const ExercisePage(categoryName: '', level: 4,),
+          builder: (_) => const LoginPage(),
         );
 
       default:

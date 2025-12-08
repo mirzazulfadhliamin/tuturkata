@@ -88,9 +88,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildHeader() {
     return Column(
       children: [
-        SvgPicture.asset(
-          'assets/svg/logo.svg',
-          height: 48,
+        Image.asset(
+          'assets/png/logo.png',
+          width: 300,
+          fit: BoxFit.fill,
         ),
         const SizedBox(height: 12),
         Text(

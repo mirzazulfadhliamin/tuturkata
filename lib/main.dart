@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise_bloc.dart';
 import 'core/bloc/test.dart';
 
 import 'core/route/app_route.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<ExampleBloc>()),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(),
+        ),
+        BlocProvider<ExerciseBloc>(
+          create: (context) => ExerciseBloc(),
         ),
       ],
       child: MaterialApp(

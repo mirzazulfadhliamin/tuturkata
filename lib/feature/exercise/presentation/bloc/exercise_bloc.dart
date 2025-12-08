@@ -5,10 +5,16 @@ import 'exercise_state.dart';
 import 'exercise_model.dart';
 
 class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
-  ExerciseBloc() : super(ExerciseState.initial()) {
-    on<LoadExercises>((event, emit) {
+  ExerciseBloc() : super(ExerciseInitial()) {
+
+    on<LoadExercisesEvent>((event, emit) async {
+      emit(ExerciseLoading());
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
       final exercises = [
         ExerciseModel(
+          id: 1,
           title: 'Membaca Kata',
           subtitle: 'Latihan pengucapan kata dasar',
           progress: 80,
@@ -21,6 +27,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
           ],
         ),
         ExerciseModel(
+          id: 2,
           title: 'Kalimat Tingkat Dasar',
           subtitle: 'Latihan pengucapan kata dasar',
           progress: 75,
@@ -33,6 +40,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
           ],
         ),
         ExerciseModel(
+          id: 3,
           title: 'Kalimat Tingkat Menengah',
           subtitle: 'Latihan pengucapan kata menengah',
           progress: 50,
@@ -45,6 +53,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
           ],
         ),
         ExerciseModel(
+          id: 4,
           title: 'Kalimat Tingkat Lanjut',
           subtitle: 'Latihan pengucapan kalimat lanjut',
           progress: 25,
@@ -53,12 +62,12 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
           iconBg: AppColor.orangeDark.value,
           gradient: [
             AppColor.orangeDark.value,
-            AppColor.orange.value, // pengganti 0xFFF44900
+            AppColor.orange.value,
           ],
         ),
       ];
 
-      emit(ExerciseState(exercises: exercises));
+      emit(ExerciseLoaded(exercises: exercises));
     });
   }
 }

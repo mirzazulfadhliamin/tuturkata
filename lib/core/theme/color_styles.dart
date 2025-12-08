@@ -19,6 +19,7 @@ class AppColor {
   static const gray = Color(0xFFACB5BB);
   static const grayLight = Color(0xFFE5E7EB);
   static const grayDark = Color(0xFF6C7278);
+  static const grayBlue = Color(0xFFD1D5DC);
 
   // ========== SEMANTIC COLORS ==========
   static const success = Color(0xFF10B981);
@@ -46,6 +47,8 @@ class AppColor {
   static const blueDark = Color(0xFF155CFB);
   static const amberDark = Color(0xFFD08700);
   static const yellowSoft = Color(0xFFFEF9C2);
+  static const gold = Color(0xFFF0B100);
+
 
   // ========== TEXT COLORS ==========
   static const textPrimary = Color(0xFF1C1F28);

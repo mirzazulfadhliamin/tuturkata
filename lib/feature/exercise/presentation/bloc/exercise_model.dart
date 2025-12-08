@@ -1,5 +1,6 @@
 // exercise_model.dart
 class ExerciseModel {
+  final int id;
   final String title;
   final String subtitle;
   final int progress;
@@ -9,6 +10,7 @@ class ExerciseModel {
   final List<int> gradient;
 
   ExerciseModel({
+    required this.id,
     required this.title,
     required this.subtitle,
     required this.progress,

@@ -8,6 +8,7 @@ import 'package:tutur_kata/feature/exercise/presentation/pages/widgets/learning_
 import '../bloc/exercise_bloc.dart';
 import '../bloc/exercise_event.dart';
 import '../bloc/exercise_state.dart';
+import 'exercise_detail.dart';
 
 class ExercisePage extends StatelessWidget {
   final String categoryName;
@@ -22,57 +23,71 @@ class ExercisePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExerciseBloc()..add(LoadExercises()),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F7FC),
-        body: SafeArea(
-          child: BlocBuilder<ExerciseBloc, ExerciseState>(
-            builder: (context, state) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildHeader(context),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
-                      child: Column(
-                        children: [
-                          ...state.exercises.asMap().entries.map((entry) {
-                            final item = entry.value;
-                            final index = entry.key;
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: LearningCard(
-                                title: item.title,
-                                subtitle: item.subtitle,
-                                progress: item.progress,
-                                isCompleted: item.completed,
-                                icon: _getIconForIndex(index),
-                                iconColor: Color(item.iconColor),
-                                iconBackground: Color(item.iconBg),
-                                gradientColors: item.gradient
-                                    .map((hex) => Color(hex))
-                                    .toList(),
-                                onTap: () {
-                                  // TODO: Navigasi ke Latihan / Quiz
-                                },
-                              ),
-                            );
-                          }),
-                          _buildEndlessModeCard(),
-                        ],
-                      ),
+      create: (_) => ExerciseBloc()..add(LoadExercisesEvent()),
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF7F7FC),
+          body: SafeArea(
+            child: BlocBuilder<ExerciseBloc, ExerciseState>(
+              builder: (context, state) {
+                if (state is ExerciseLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state is ExerciseLoaded) {
+                  final loaded = state;
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildHeader(context),
+                        const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          child: Column(
+                            children: [
+                              ...loaded.exercises.asMap().entries.map((entry) {
+                                final item = entry.value;
+                                final index = entry.key;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: LearningCard(
+                                    title: item.title,
+                                    subtitle: item.subtitle,
+                                    progress: item.progress,
+                                    isCompleted: item.completed,
+                                    icon: _getIconForIndex(index),
+                                    iconColor: Color(item.iconColor),
+                                    iconBackground: Color(item.iconBg),
+                                    gradientColors: item.gradient.map((hex) => Color(hex)).toList(),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ExerciseDetailPage(
+                                            id: item.id,
+                                            title: item.title, // kalau butuh title
+                                          ),
+                                        ),
+                                      );
+                                    },
+
+                                  ),
+                                );
+                              }),
+                              _buildEndlessModeCard(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            },
+                  );
+                }
+
+                return const SizedBox();
+              },
+            ),
           ),
-        ),
-      ),
+        )
     );
   }
 

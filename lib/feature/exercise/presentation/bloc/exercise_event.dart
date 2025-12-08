@@ -1,4 +1,3 @@
-// exercise_event.dart
 abstract class ExerciseEvent {}
 
-class LoadExercises extends ExerciseEvent {}
+class LoadExercisesEvent extends ExerciseEvent {}

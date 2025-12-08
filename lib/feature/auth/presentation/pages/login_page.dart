@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -78,9 +79,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Text(
-          'Tuturkata',
-          style: tsHeadingLargeBold(AppColor.primary),
+        SvgPicture.asset(
+          'assets/svg/logo.svg',
+          height: 48,
         ),
         const SizedBox(height: 12),
         Text(
@@ -106,10 +107,10 @@ class _LoginPageState extends State<LoginPage> {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'aisyah@email.com',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.email_outlined, color: AppColor.gray),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),
@@ -162,8 +163,8 @@ class _LoginPageState extends State<LoginPage> {
           controller: _passwordController,
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
-            hintText: '••••••••',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintText: 'Password Kamu',
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
             suffixIcon: IconButton(
               icon: Icon(
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),

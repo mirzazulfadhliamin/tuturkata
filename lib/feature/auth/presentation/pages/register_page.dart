@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -87,9 +88,9 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Text(
-          'Tuturkata',
-          style: tsHeadingLargeBold(AppColor.primary),
+        SvgPicture.asset(
+          'assets/svg/logo.svg',
+          height: 48,
         ),
         const SizedBox(height: 12),
         Text(
@@ -115,10 +116,10 @@ class _RegisterPageState extends State<RegisterPage> {
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
             hintText: 'Aisyah Aisyara Putri',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.person_outline, color: AppColor.gray),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),
@@ -172,10 +173,10 @@ class _RegisterPageState extends State<RegisterPage> {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'aisyah@email.com',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.email_outlined, color: AppColor.gray),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),
@@ -229,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             hintText: 'Minimal 8 karakter',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
             suffixIcon: IconButton(
               icon: Icon(
@@ -245,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             ),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),
@@ -299,7 +300,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: !_isConfirmPasswordVisible,
           decoration: InputDecoration(
             hintText: 'Ulangi password',
-            hintStyle: tsBodyMediumRegular(AppColor.textHint),
+            hintStyle: tsBodyMediumRegular(AppColor.gray),
             prefixIcon: Icon(Icons.lock_outline, color: AppColor.gray),
             suffixIcon: IconButton(
               icon: Icon(
@@ -315,7 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             ),
             filled: true,
-            fillColor: AppColor.silver,
+            fillColor: AppColor.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColor.border),

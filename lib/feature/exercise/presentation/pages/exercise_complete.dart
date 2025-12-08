@@ -26,7 +26,7 @@ class ExerciseResultPage extends StatelessWidget {
               _buildScoreCard(),
               const SizedBox(height: 24),
               _buildUnlockBanner(),
-              const Spacer(),
+              const SizedBox(height: 24),
               _buildContinueButton(context),
               const SizedBox(height: 16),
               _buildActionButtons(context),
@@ -86,7 +86,7 @@ class ExerciseResultPage extends StatelessWidget {
     return Icon(
       filled ? Icons.star : Icons.star_border,
       size: 48,
-      color: filled ? AppColor.yellow : AppColor.gray,
+      color: filled ? AppColor.yellow : AppColor.grayLight,
     );
   }
 

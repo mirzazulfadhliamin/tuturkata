@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColor {
   // ========== PRIMARY COLORS ==========
-  static const primary = Color(0xFF2DD4BF);
+  static const primary = Color(0xFF39FFFF);
   static const primaryLight = Color(0xFFCCFBF1);
   static const primaryMedium = Color(0xFF30C0B0);
   static const primaryBright = Color(0xFF40E0D0);
@@ -53,7 +53,7 @@ class AppColor {
 
   // ========== BORDER COLORS ==========
   static const border = Color(0xFFE5E7EB);
-  static const borderFocus = Color(0xFF2DD4BF);
+  static const borderFocus = Color(0xFF39FFFF);
   static const borderError = Color(0xFFEF4444);
 
   // ========== TRANSPARENT VARIANTS ==========

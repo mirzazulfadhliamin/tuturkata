@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:tutur_kata/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise_bloc.dart';
 import 'core/bloc/test.dart';
 
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => di.sl<ExampleBloc>()),
+        BlocProvider<AuthBloc>(
+          create: (_) => di.sl<AuthBloc>(),
+        ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(),
         ),

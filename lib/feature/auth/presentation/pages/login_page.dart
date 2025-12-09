@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../home/presentation/pages/home_page.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_event.dart';
+import '../bloc/auth_repository.dart';
+import '../bloc/auth_state.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,53 +34,75 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() => _isLoading = false);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login berhasil!'),
-            backgroundColor: AppColor.success,
-          ),
-        );
-      });
+      context.read<AuthBloc>().add(
+        LoginRequested(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 60),
-                _buildHeader(),
-                const SizedBox(height: 60),
-                _buildEmailField(),
-                const SizedBox(height: 20),
-                _buildPasswordField(),
-                const SizedBox(height: 12),
-                _buildForgotPassword(),
-                const SizedBox(height: 32),
-                _buildLoginButton(),
-                const SizedBox(height: 24),
-                _buildRegisterLink(),
-                const SizedBox(height: 24),
-              ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthLoading) {
+          setState(() => _isLoading = true);
+        } else {
+          setState(() => _isLoading = false);
+        }
+
+        if (state is AuthSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login berhasil!")),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => HomePage()),
+          );
+        }
+
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 60),
+                  _buildHeader(),
+                  const SizedBox(height: 60),
+                  _buildEmailField(),
+                  const SizedBox(height: 20),
+                  _buildPasswordField(),
+                  const SizedBox(height: 12),
+                  _buildForgotPassword(),
+                  const SizedBox(height: 32),
+                  _buildLoginButton(),
+                  const SizedBox(height: 24),
+                  _buildRegisterLink(),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+
 
   Widget _buildHeader() {
     return Column(
@@ -210,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value == null || value.isEmpty) {
               return 'Password tidak boleh kosong';
             }
-            if (value.length < 6) {
+            if (value.length < 3) {
               return 'Password minimal 6 karakter';
             }
             return null;

@@ -12,7 +12,7 @@ class AppRoute {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
-          builder: (_) => const LoginPage(),
+          builder: (_) => const ProfilePage(),
         );
 
       default:

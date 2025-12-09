@@ -4,7 +4,7 @@ class AppColor {
   // ========== PRIMARY COLORS ==========
   static const primary = Color(0xFF40E0D0);
   static const primaryLight = Color(0xFFCCFBF1);
-  static const primaryMedium = Color(0xFF30C0B0);
+  static const primaryMedium = Color(0xFF31B6A7);
   static const primaryBright = Color(0xFF40E0D0);
   static const primaryDark = Color(0xFF0F766E);
 

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_event.dart';
@@ -36,7 +37,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
 
       emit(RegisterSuccess(user));
-
       debugPrint("""
     ===== REGISTER SUCCESS =====
     $user
@@ -44,9 +44,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     """);
 
     } catch (e) {
-      emit(AuthFailure(e.toString()));
-      debugPrint("REGISTER FAILED: $e");
+      if (e is DioException) {
+        final message = e.response?.data["detail"] ??
+            "Terjadi kesalahan server, silakan coba lagi.";
+        emit(RegisterFailure(message));
+        debugPrint("REGISTER FAILED (API Message): $message");
+      } else {
+        emit(RegisterFailure("Terjadi kesalahan tidak diketahui"));
+        debugPrint("REGISTER FAILED (Unknown Error): $e");
+      }
     }
   }
-
 }

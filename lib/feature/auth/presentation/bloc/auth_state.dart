@@ -18,3 +18,8 @@ class RegisterSuccess extends AuthState {
   final Map<String, dynamic> user;
   RegisterSuccess(this.user);
 }
+
+class RegisterFailure extends AuthState{
+  final String message;
+  RegisterFailure(this.message);
+}

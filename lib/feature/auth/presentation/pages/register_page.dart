@@ -64,7 +64,11 @@ class _RegisterPageState extends State<RegisterPage> {
           );
           Navigator.pushReplacementNamed(context, "/login");
         }
-
+        if (state is RegisterFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
         if (state is AuthFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),

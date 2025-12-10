@@ -58,11 +58,11 @@ class _RegisterPageState extends State<RegisterPage> {
           setState(() => _isLoading = false);
         }
 
-        if (state is AuthSuccess) {
+        if (state is RegisterSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Registrasi berhasil")),
           );
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, "/login");
         }
 
         if (state is AuthFailure) {

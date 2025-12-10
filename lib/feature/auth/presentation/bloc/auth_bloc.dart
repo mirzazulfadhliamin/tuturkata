@@ -20,7 +20,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final token = await repository.login(event.email, event.password);
       emit(AuthSuccess(token));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      if (e is DioException) {
+        final message = e.response?.data["detail"] ??
+            "Terjadi kesalahan server, silakan coba lagi.";
+        emit(AuthFailure(message));
+      } else {
+        emit(AuthFailure(e.toString()));
+      }
     }
   }
 
@@ -37,21 +43,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
 
       emit(RegisterSuccess(user));
-      debugPrint("""
-    ===== REGISTER SUCCESS =====
-    $user
-    =============================
-    """);
-
     } catch (e) {
       if (e is DioException) {
         final message = e.response?.data["detail"] ??
             "Terjadi kesalahan server, silakan coba lagi.";
         emit(RegisterFailure(message));
-        debugPrint("REGISTER FAILED (API Message): $message");
       } else {
         emit(RegisterFailure("Terjadi kesalahan tidak diketahui"));
-        debugPrint("REGISTER FAILED (Unknown Error): $e");
       }
     }
   }

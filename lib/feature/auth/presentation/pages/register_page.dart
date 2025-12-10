@@ -69,11 +69,6 @@ class _RegisterPageState extends State<RegisterPage> {
             SnackBar(content: Text(state.message)),
           );
         }
-        if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
       },
       child: Scaffold(
         backgroundColor: AppColor.white,

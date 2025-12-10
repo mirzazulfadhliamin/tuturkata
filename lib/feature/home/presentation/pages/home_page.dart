@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColor.background,  // ✔ pakai theme
+          backgroundColor: AppColor.background,
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {

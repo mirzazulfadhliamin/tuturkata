@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../bloc/profile_bloc.dart';
+import '../bloc/profile_event.dart';
+import '../bloc/profile_state.dart';
 
 
 class ProfilePage extends StatelessWidget {
@@ -9,32 +13,57 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(LoadProfile());
+    });
     return Scaffold(
       backgroundColor: AppColor.background,
-      body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 24),
-                  _buildPersonalInfoCard(),
-                  const SizedBox(height: 16),
-                  _buildSettingsCard(),
-                  const SizedBox(height: 24),
-                  _buildLogoutButton(context),
-                  const SizedBox(height: 32),
-                ],
-              ),
-            ),
-          ),
-        ],
+      body: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is ProfileFailure) {
+            return Center(child: Text(state.message));
+          }
+
+          if (state is ProfileLoaded) {
+            final user = state.profile;
+
+            return Column(
+              children: [
+                _buildHeader(user.username),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        _buildPersonalInfoCard(
+                          username: user.username,
+                          email: user.email,
+                          createdAt: user.createdAt,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSettingsCard(),
+                        const SizedBox(height: 24),
+                        _buildLogoutButton(context),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return const SizedBox();
+        },
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(String username) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -65,7 +94,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Aisyah Aisyara Putri',
+                username,
                 style: tsTitleMediumBold(AppColor.white),
               ),
             ],
@@ -75,7 +104,11 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPersonalInfoCard() {
+  Widget _buildPersonalInfoCard({
+    required String username,
+    required String email,
+    required String createdAt,
+}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(20),
@@ -103,7 +136,7 @@ class ProfilePage extends StatelessWidget {
             iconBgColor: const Color(0xFFE3F2FD),
             iconColor: AppColor.blue,
             label: 'Username',
-            value: 'aisyah_putri',
+            value: username,
           ),
           const SizedBox(height: 16),
           _buildInfoRow(
@@ -111,7 +144,7 @@ class ProfilePage extends StatelessWidget {
             iconBgColor: AppColor.primaryLight,
             iconColor: AppColor.primaryDark,
             label: 'Email',
-            value: 'aisyah.putri@email.com',
+            value: email,
           ),
           const SizedBox(height: 16),
           _buildInfoRow(
@@ -119,7 +152,7 @@ class ProfilePage extends StatelessWidget {
             iconBgColor: const Color(0xFFFFF4E6),
             iconColor: AppColor.orange,
             label: 'Tanggal Dibuat',
-            value: '15 Januari 2024',
+            value: createdAt,
           ),
         ],
       ),
@@ -343,7 +376,13 @@ class ProfilePage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Handle logout
+
+              context.read<ProfileBloc>().add(LogoutRequested());
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                "/login",
+                    (route) => false,
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.error,

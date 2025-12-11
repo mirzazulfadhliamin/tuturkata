@@ -220,6 +220,7 @@ class _ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       height: 8,
       decoration: BoxDecoration(
         color: AppColor.grayLight,
@@ -227,7 +228,7 @@ class _ProgressBar extends StatelessWidget {
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: progress,
+        widthFactor: progress.clamp(0.0, 1.0),
         child: Container(
           decoration: BoxDecoration(
             color: AppColor.primary,

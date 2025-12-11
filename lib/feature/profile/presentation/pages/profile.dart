@@ -376,7 +376,13 @@ class ProfilePage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Handle logout
+
+              context.read<ProfileBloc>().add(LogoutRequested());
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                "/login",
+                    (route) => false,
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColor.error,

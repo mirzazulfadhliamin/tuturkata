@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../bloc/exercise_bloc.dart';
-import '../bloc/exercise_event.dart';
-import '../bloc/exercise_state.dart';
+import '../bloc/exercise/exercise_bloc.dart';
+import '../bloc/exercise/exercise_event.dart';
+import '../bloc/exercise/exercise_state.dart';
 import 'widgets/learning_card.dart';
 import 'exercise_detail.dart';
 
@@ -14,6 +14,11 @@ class ExercisePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      print('Dispatching GetUserExercisesEvent');
+      context.read<ExerciseBloc>().add(GetUserExercisesEvent());
+    });
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SafeArea(
@@ -30,6 +35,7 @@ class ExercisePage extends StatelessWidget {
 
             // Failure state
             if (state is ExerciseFailure) {
+              print('Exercise failure: ${state.message}');
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
@@ -77,7 +83,8 @@ class ExercisePage extends StatelessWidget {
             // Success state (ExerciseSuccess)
             if (state is ExerciseSuccess) {
               // Check if exercises list is empty
-              if (state.exercises.isEmpty) {
+              if (state.exercise.isEmpty) {
+                print('No exercises available');
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
@@ -90,6 +97,7 @@ class ExercisePage extends StatelessWidget {
                 );
               }
 
+              print('Exercises loaded: ${state.exercise.length}');
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -102,7 +110,7 @@ class ExercisePage extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          ...state.exercises.asMap().entries.map((entry) {
+                          ...state.exercise.asMap().entries.map((entry) {
                             final exercise = entry.value;
                             final index = entry.key;
                             return Padding(
@@ -124,6 +132,7 @@ class ExercisePage extends StatelessWidget {
                                       builder: (_) => ExerciseDetailPage(
                                         id: exercise.exerciseId,
                                         title: exercise.title,
+                                        desc: exercise.desc
                                       ),
                                     ),
                                   );

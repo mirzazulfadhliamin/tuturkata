@@ -12,7 +12,7 @@ class ApiService {
       data: {"email": email, "password": password},
     );
   }
-  
+
   Future<Response> postRegister(String username, String email, String password) async {
     return await _dio.post(
       "/users/register",
@@ -35,7 +35,7 @@ class ApiService {
     );
   }
 
-  Future<Response> getUserExercises(String token) async {
+  Future<Response> getUserExercise(String token) async {
     return await _dio.get(
       "/user-exercises/",
       options: Options(
@@ -45,4 +45,17 @@ class ApiService {
       ),
     );
   }
+
+  Future<Response> getUserExerciseDetail(String token, String exerciseId) async {
+    return await _dio.get(
+      "/user-levels/$exerciseId",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+
+
 }

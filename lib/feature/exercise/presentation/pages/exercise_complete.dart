@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/color_styles.dart';
-import '../../../../core/theme/text_styles.dart';
-import '../../../home/presentation/pages/home_page.dart';
+// Sesuaikan path import ini
+import 'package:tutur_kata/core/theme/color_styles.dart';
+import 'package:tutur_kata/core/theme/text_styles.dart';
+import '../../../home/presentation/pages/home_page.dart'; // Pastikan path ke HomePage benar
 
 class ExerciseResultPage extends StatelessWidget {
   const ExerciseResultPage({super.key});
@@ -63,7 +64,7 @@ class ExerciseResultPage extends StatelessWidget {
 
   Widget _buildTitle() {
     return Text(
-      'Latihan Membaca Kata - Level 2',
+      'Latihan Selesai!',
       textAlign: TextAlign.center,
       style: tsBodyLargeMedium(AppColor.textSecondary),
     );
@@ -77,7 +78,7 @@ class ExerciseResultPage extends StatelessWidget {
         const SizedBox(width: 16),
         _buildStar(true),
         const SizedBox(width: 16),
-        _buildStar(false),
+        _buildStar(true), // Full stars for completion
       ],
     );
   }
@@ -113,12 +114,12 @@ class ExerciseResultPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '84% Akurasi',
+            '100% Selesai',
             style: tsHeadingMediumBold(AppColor.textPrimary),
           ),
           const SizedBox(height: 16),
           Text(
-            '+120 XP',
+            '+50 XP',
             style: tsTitleMediumSemiBold(AppColor.primary),
           ),
         ],
@@ -148,7 +149,7 @@ class ExerciseResultPage extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.star,
+              Icons.lock_open,
               color: AppColor.white,
               size: 24,
             ),
@@ -159,12 +160,12 @@ class ExerciseResultPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Level Baru Terbuka!',
+                  'Hebat!',
                   style: tsBodyLargeSemiBold(AppColor.purple),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Latihan Membaca Kata - Level 3',
+                  'Kamu telah menyelesaikan sesi ini.',
                   style: tsBodyMediumRegular(AppColor.textSecondary),
                 ),
               ],
@@ -180,7 +181,12 @@ class ExerciseResultPage extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.pop(context);
+          // Logic lanjut ke level berikutnya atau kembali ke home
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+                (route) => false,
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColor.primary,
@@ -195,11 +201,11 @@ class ExerciseResultPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Lanjut ke Level 3',
+              'Selesai',
               style: tsBodyLargeSemiBold(AppColor.white),
             ),
             const SizedBox(width: 8),
-            Icon(Icons.arrow_forward, size: 20, color: AppColor.white),
+            Icon(Icons.check, size: 20, color: AppColor.white),
           ],
         ),
       ),
@@ -211,7 +217,10 @@ class ExerciseResultPage extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              // Logic mengulang (Pop)
+              Navigator.pop(context);
+            },
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: BorderSide(color: AppColor.border),
@@ -230,7 +239,12 @@ class ExerciseResultPage extends StatelessWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () {
-              Navigator.pop(context);
+              // Ke Beranda
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+                    (route) => false,
+              );
             },
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -240,22 +254,9 @@ class ExerciseResultPage extends StatelessWidget {
               ),
             ),
             icon: Icon(Icons.home_outlined, color: AppColor.textSecondary, size: 20),
-            label:  TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                'Beranda',
-                style: tsBodyMediumSemiBold(AppColor.textSecondary),
-              ),
+            label: Text(
+              'Beranda',
+              style: tsBodyMediumSemiBold(AppColor.textSecondary),
             ),
           ),
         ),

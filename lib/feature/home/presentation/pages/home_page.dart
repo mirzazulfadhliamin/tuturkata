@@ -10,7 +10,6 @@ import 'package:tutur_kata/feature/home/presentation/pages/widgets/home_header.d
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/loading_simmer.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/stats_card.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/weekly_challenge_card.dart';
-import 'package:tutur_kata/feature/profile/presentation/pages/profile.dart';
 
 import '../../../../../core/theme/color_styles.dart';
 import '../../../exercise/presentation/pages/exercise_detail.dart';
@@ -75,7 +74,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => ExercisePage(),
+                  builder: (_) => ExerciseLevelPage(levelId: state.nextLevelId,),
                 ),
               );
             },

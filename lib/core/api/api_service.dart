@@ -58,6 +58,16 @@ class ApiService {
       ),
     );
   }
+  Future<Response> getUserExerciseLevel(String token, String levelId) async {
+    return await _dio.get(
+      "/level-quizzes/by-level/$levelId",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
 
   Future<Response> getDailyMissions(String token) async{
     return await _dio.get(
@@ -69,6 +79,28 @@ class ApiService {
         },
       ),
     );
+  }
+
+  Future<Response> postAITranscribe(String token, String filePath) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          filePath,
+          filename: 'audio.m4a',
+        ),
+      });
+      return await _dio.post(
+        "/ai/transcribe",
+        data: formData,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
   Future<Response> getNextLevel(String token) async {
     return await _dio.get(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tutur_kata/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise/exercise_bloc.dart';
 import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise_detail/exercise_detail_bloc.dart';
@@ -10,6 +9,8 @@ import 'core/bloc/test.dart';
 
 import 'core/route/app_route.dart';
 import 'core/theme/app_theme.dart';
+import 'feature/exercise/presentation/bloc/exercise_detail/exercise_detail_bloc.dart';
+import 'feature/exercise/presentation/bloc/exercise_level/exercise_level_bloc.dart';
 import 'feature/home/presentation/bloc/home_bloc.dart';
 import 'feature/home/presentation/bloc/home_repository.dart';
 import 'injection_container.dart' as di;
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProfileBloc>(create: (context) => ProfileBloc(ProfileRepository()),),
         BlocProvider<ExerciseBloc>(create: (context) => di.sl<ExerciseBloc>()),
         BlocProvider<ExerciseDetailBloc>(create: (context) => di.sl<ExerciseDetailBloc>()),
+        BlocProvider<ExerciseLevelBloc>(create: (_) => di.sl<ExerciseLevelBloc>()),
       ],
       child: MaterialApp(
         title: "Flutter BLoC Setup",

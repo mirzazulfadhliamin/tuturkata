@@ -8,6 +8,7 @@ import '../bloc/exercise_detail/exercise_detail_bloc.dart';
 import '../bloc/exercise_detail/exercise_detail_event.dart';
 import '../bloc/exercise_detail/exercise_detail_model.dart';
 import '../bloc/exercise_detail/exercise_detail_state.dart';
+import 'exercise_level.dart';
 
 class ExerciseDetailPage extends StatelessWidget {
   final String id;
@@ -23,7 +24,6 @@ class ExerciseDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dispatch the event to fetch exercise details when this page is loaded
     Future.delayed(Duration.zero, () {
       print('Dispatching GetExerciseDetailEvent with exerciseId: $id');
       context.read<ExerciseDetailBloc>().add(GetExerciseDetailEvent(exerciseId: id));
@@ -47,7 +47,6 @@ class ExerciseDetailPage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<ExerciseDetailBloc, ExerciseDetailState>(
           builder: (context, state) {
-            // Loading state
             if (state is ExerciseDetailLoading) {
               print('ExerciseDetailLoading state received');
               return Center(
@@ -57,7 +56,6 @@ class ExerciseDetailPage extends StatelessWidget {
               );
             }
 
-            // Failure state
             if (state is ExerciseDetailFailure) {
               print('ExerciseDetailFailure state received: ${state.message}');
               return Center(
@@ -118,14 +116,14 @@ class ExerciseDetailPage extends StatelessWidget {
                     const SizedBox(height: 18),
                     _buildTipsCard(),
                     const SizedBox(height: 28),
-                    _buildLevelList(exerciseDetailList),
+                    _buildLevelList(exerciseDetailList, context),
                     const SizedBox(height: 28),
                   ],
                 ),
               );
             }
 
-            return const SizedBox(); // Default case, shouldn't happen
+            return const SizedBox();
           },
         ),
       ),
@@ -159,7 +157,7 @@ class ExerciseDetailPage extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: tsTitleSmallRegular(Colors.white),
+              style: tsTitleSmallSemiBold(Colors.white),
             ),
           ),
         ],
@@ -197,7 +195,7 @@ class ExerciseDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLevelList(List<ExerciseDetailModel> exerciseDetailList) {
+  Widget _buildLevelList(List<ExerciseDetailModel> exerciseDetailList, context) {
     print('Building level list with ${exerciseDetailList.length} items');
     return Column(
       children: [
@@ -208,19 +206,23 @@ class ExerciseDetailPage extends StatelessWidget {
             subtitle: exerciseDetailList[i].desc,
             stars: exerciseDetailList[i].star,
             locked: i != 0 && !exerciseDetailList[i - 1].isCompleted,
+            onTap: i == 0 || exerciseDetailList[i - 1].isCompleted
+                ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ExerciseLevelPage(
+                    levelId: exerciseDetailList[i].levelId,
+                  ),
+                ),
+              );
+            }
+                : null,
           ),
           if (i != exerciseDetailList.length - 1)
             _buildDividerLine(i != 0 && !exerciseDetailList[i - 1].isCompleted),
         ],
       ],
-    );
-  }
-
-  Widget _buildDividerLine(bool aboveLocked) {
-    return Container(
-      height: 32,
-      width: 4,
-      color: aboveLocked ? AppColor.grayBlue : AppColor.primary,
     );
   }
 
@@ -230,30 +232,34 @@ class ExerciseDetailPage extends StatelessWidget {
     required String subtitle,
     required int stars,
     required bool locked,
+    required VoidCallback? onTap,
   }) {
     print('Building level item for Level $level');
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: locked ? AppColor.silver : AppColor.white,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          _buildLevelBadge(level, locked),
-          const SizedBox(width: 16),
-          Expanded(
-            child: _buildLevelTexts(title, subtitle, locked),
-          ),
-          locked
-              ? const SizedBox.shrink()
-              : Row(
-            children: [
-              _buildStars(stars),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: locked ? AppColor.silver : AppColor.white,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          children: [
+            _buildLevelBadge(level, locked),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildLevelTexts(title, subtitle, locked),
+            ),
+            locked
+                ? const SizedBox.shrink()
+                : Row(
+              children: [
+                _buildStars(stars),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -291,7 +297,7 @@ class ExerciseDetailPage extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: tsLabelLargeRegular(AppColor.textSecondary),
+          style: tsBodyMediumRegular(AppColor.textSecondary),
         ),
       ],
     );
@@ -307,6 +313,14 @@ class ExerciseDetailPage extends StatelessWidget {
           size: 20,
         ),
       ),
+    );
+  }
+
+  Widget _buildDividerLine(bool aboveLocked) {
+    return Container(
+      height: 32,
+      width: 4,
+      color: aboveLocked ? AppColor.grayBlue : AppColor.primary,
     );
   }
 }

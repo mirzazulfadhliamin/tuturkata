@@ -1,3 +1,3 @@
 abstract class ExerciseEvent {}
 
-class LoadExercisesEvent extends ExerciseEvent {}
+class GetUserExercisesEvent extends ExerciseEvent {}

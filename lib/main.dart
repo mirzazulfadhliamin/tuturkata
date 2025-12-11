@@ -24,16 +24,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<ExampleBloc>()),
-        BlocProvider<AuthBloc>(
-          create: (_) => di.sl<AuthBloc>(),
-        ),
-        BlocProvider<HomeBloc>(
-          create: (context) => HomeBloc(),
-        ),
-        BlocProvider<ExerciseBloc>(
-          create: (context) => ExerciseBloc(),
-        ),
+        BlocProvider<ExampleBloc>(create: (_) => di.sl<ExampleBloc>()),
+        BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
+        BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
+        BlocProvider<ExerciseBloc>(create: (_) => di.sl<ExerciseBloc>()),
       ],
       child: MaterialApp(
         title: "Flutter BLoC Setup",
@@ -45,6 +39,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 
 

@@ -5,7 +5,7 @@ import 'package:tutur_kata/core/theme/color_styles.dart';
 import 'package:tutur_kata/core/theme/text_styles.dart';
 
 class ExerciseDetailPage extends StatelessWidget {
-  final int id;
+  final String id;
   final String title;
 
   const ExerciseDetailPage({

@@ -12,4 +12,15 @@ class ApiService {
       data: {"email": email, "password": password},
     );
   }
+
+  Future<Response> getUserExercises(String token) async {
+    return await _dio.get(
+      "/user-exercises/",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
 }

@@ -1,112 +1,183 @@
-// exercise_page.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutur_kata/core/theme/color_styles.dart';
-import 'package:tutur_kata/core/theme/text_styles.dart';
-import 'package:tutur_kata/feature/exercise/presentation/pages/widgets/learning_card.dart';
+import '../../../../core/theme/color_styles.dart';
+import '../../../../core/theme/text_styles.dart';
 import '../bloc/exercise_bloc.dart';
 import '../bloc/exercise_event.dart';
 import '../bloc/exercise_state.dart';
+import 'widgets/learning_card.dart';
 import 'exercise_detail.dart';
 
 class ExercisePage extends StatelessWidget {
-  final String categoryName;
-  final int level;
-
-  const ExercisePage({
-    Key? key,
-    required this.categoryName,
-    required this.level,
-  }) : super(key: key);
+  const ExercisePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ExerciseBloc()..add(LoadExercisesEvent()),
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF7F7FC),
-          body: SafeArea(
-            child: BlocBuilder<ExerciseBloc, ExerciseState>(
-              builder: (context, state) {
-                if (state is ExerciseLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+    return Scaffold(
+      backgroundColor: AppColor.background,
+      body: SafeArea(
+        child: BlocBuilder<ExerciseBloc, ExerciseState>(
+          builder: (context, state) {
+            // Loading state
+            if (state is ExerciseLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.primary,
+                ),
+              );
+            }
 
-                if (state is ExerciseLoaded) {
-                  final loaded = state;
-
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _buildHeader(context),
-                        const SizedBox(height: 12),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                          child: Column(
-                            children: [
-                              ...loaded.exercises.asMap().entries.map((entry) {
-                                final item = entry.value;
-                                final index = entry.key;
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: LearningCard(
-                                    title: item.title,
-                                    subtitle: item.subtitle,
-                                    progress: item.progress,
-                                    isCompleted: item.completed,
-                                    icon: _getIconForIndex(index),
-                                    iconColor: Color(item.iconColor),
-                                    iconBackground: Color(item.iconBg),
-                                    gradientColors: item.gradient.map((hex) => Color(hex)).toList(),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => ExerciseDetailPage(
-                                            id: item.id,
-                                            title: item.title, // kalau butuh title
-                                          ),
-                                        ),
-                                      );
-                                    },
-
-                                  ),
-                                );
-                              }),
-                              _buildEndlessModeCard(),
-                            ],
+            // Failure state
+            if (state is ExerciseFailure) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: AppColor.error,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.message,
+                        style: tsBodyMediumRegular(AppColor.textSecondary),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<ExerciseBloc>().add(GetUserExercisesEvent());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          foregroundColor: AppColor.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                }
+                        child: Text(
+                          'Coba Lagi',
+                          style: tsBodyMediumSemiBold(AppColor.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
 
-                return const SizedBox();
-              },
-            ),
-          ),
-        )
+            // Success state (ExerciseSuccess)
+            if (state is ExerciseSuccess) {
+              // Check if exercises list is empty
+              if (state.exercises.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      'No exercises available',
+                      style: tsBodyMediumRegular(AppColor.textSecondary),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        children: [
+                          ...state.exercises.asMap().entries.map((entry) {
+                            final exercise = entry.value;
+                            final index = entry.key;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: LearningCard(
+                                title: exercise.title,
+                                subtitle: exercise.desc,
+                                progress: exercise.progressPercentage,
+                                isCompleted: exercise.isCompleted,
+                                icon: CupertinoIcons.book,
+                                iconColor: _getIconColorForIndex(index)
+                                    .withOpacity(0.1),
+                                iconBackground: _getIconColorForIndex(index),
+                                gradientColors: _getGradientForIndex(index),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ExerciseDetailPage(
+                                        id: exercise.exerciseId,
+                                        title: exercise.title,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          }),
+                          _buildEndlessModeCard(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox(); // Default case, shouldn't happen
+          },
+        ),
+      ),
     );
   }
 
-  IconData _getIconForIndex(int index) {
+  Color _getIconColorForIndex(int index) {
     switch (index) {
       case 0:
-        return CupertinoIcons.book;
+        return AppColor.blue;
       case 1:
-        return CupertinoIcons.book;
+        return AppColor.green;
       case 2:
-        return CupertinoIcons.book;
+        return AppColor.purple;
       case 3:
-        return CupertinoIcons.book;
+        return AppColor.orange;
       default:
-        return CupertinoIcons.book;
+        return AppColor.primary;
     }
   }
 
-  Widget _buildHeader(BuildContext context) {
+  List<Color> _getGradientForIndex(int index) {
+    switch (index) {
+      case 0:
+        return [AppColor.blue, AppColor.blueLight];
+      case 1:
+        return [AppColor.green, AppColor.greenLight];
+      case 2:
+        return [AppColor.purple, AppColor.purpleLight];
+      case 3:
+        return [AppColor.orange, AppColor.orangeLight];
+      default:
+        return [AppColor.primary, AppColor.primaryLight];
+    }
+  }
+
+  Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
       child: Column(
@@ -134,11 +205,7 @@ class ExercisePage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColor.pinkPrimary, AppColor.purplePrimary],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColor.gradientHorizontal(AppColor.pink, AppColor.purple),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Stack(
@@ -150,7 +217,7 @@ class ExercisePage extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: AppColor.white.withOpacity(0.35  ),
+                  color: AppColor.white.withOpacity(0.35),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(
@@ -176,7 +243,6 @@ class ExercisePage extends StatelessWidget {
                     size: 30,
                   ),
                 ),
-
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(

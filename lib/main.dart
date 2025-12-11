@@ -8,6 +8,7 @@ import 'core/bloc/test.dart';
 import 'core/route/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'feature/home/presentation/bloc/home_bloc.dart';
+import 'feature/home/presentation/bloc/home_repository.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.sl<AuthBloc>(),
         ),
         BlocProvider<HomeBloc>(
-          create: (context) => HomeBloc(),
+          create: (context) => HomeBloc(HomeRepository()),
         ),
         BlocProvider<ExerciseBloc>(
           create: (context) => ExerciseBloc(),

@@ -23,5 +23,15 @@ class ApiService {
       },
     );
   }
+  Future<Response> getSummaryWeekly(String token) async {
+    return await _dio.get(
+      "/progress/summary-weekly",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
 
 }

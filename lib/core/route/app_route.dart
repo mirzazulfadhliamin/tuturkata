@@ -4,6 +4,7 @@ import 'package:tutur_kata/feature/auth/presentation/pages/login_page.dart';
 import 'package:tutur_kata/feature/auth/presentation/pages/register_page.dart';
 import 'package:tutur_kata/feature/exercise/presentation/pages/exercise_page.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
+import 'main_shell.dart';
 
 class AppRoute {
   Route onGenerateRoute(RouteSettings settings) {
@@ -22,7 +23,7 @@ class AppRoute {
               final prefs = snapshot.data!;
               final token = prefs.getString('access_token');
 
-              return token != null ? const ExercisePage() : LoginPage();
+              return token != null ? const MainShell() : LoginPage();
             },
           ),
         );
@@ -38,7 +39,7 @@ class AppRoute {
 
       case "/home":
         return MaterialPageRoute(
-          builder: (_) => HomePage(),
+          builder: (_) => const MainShell(),
         );
 
       default:

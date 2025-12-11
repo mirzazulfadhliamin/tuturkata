@@ -102,6 +102,86 @@ class ApiService {
       rethrow;
     }
   }
+  
+  Future<Response> getAIValidate(String token, {
+    required String instruction,
+    required String speechText,
+    required String spokenText,
+  }) async {
+    try {
+      final options = Options(
+        followRedirects: true,
+        maxRedirects: 3,
+        validateStatus: (status) => status != null && status < 500,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+      );
+
+      final resp = await _dio.post(
+        "/ai/validate/",
+        data: {
+          'instruction': instruction,
+          'speech_text': speechText,
+          'spoken_text': spokenText,
+        },
+        options: options,
+      );
+      if (resp.statusCode != null && resp.statusCode! >= 300 && resp.statusCode! < 400) {
+        final redirectUrl = resp.headers.value('location');
+        if (redirectUrl != null && redirectUrl.isNotEmpty) {
+          return await _dio.post(redirectUrl,
+              data: {
+                'instruction': instruction,
+                'speech_text': speechText,
+                'spoken_text': spokenText,
+              },
+              options: options);
+        }
+      }
+      return resp;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> getAITTS(String token, {required String message}) async {
+    try {
+      final options = Options(
+        followRedirects: true,
+        maxRedirects: 3,
+        validateStatus: (status) => status != null && status < 500,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+      );
+
+      final resp = await _dio.post(
+        "/ai/tts/",
+        data: {
+          'message': message,
+        },
+        options: options,
+      );
+      if (resp.statusCode != null && resp.statusCode! >= 300 && resp.statusCode! < 400) {
+        final redirectUrl = resp.headers.value('location');
+        if (redirectUrl != null && redirectUrl.isNotEmpty) {
+          return await _dio.post(redirectUrl,
+              data: {
+                'message': message,
+              },
+              options: options);
+        }
+      }
+      return resp;
+    } catch (e) {
+      rethrow;
+    }
+  }
   Future<Response> getNextLevel(String token) async {
     return await _dio.get(
       '/user-levels/next',

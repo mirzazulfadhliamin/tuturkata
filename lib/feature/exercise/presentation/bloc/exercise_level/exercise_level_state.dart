@@ -26,3 +26,29 @@ class ExerciseLevelFailure extends ExerciseLevelState {
 }
 
 class ExerciseLevelFinished extends ExerciseLevelState {}
+
+class ExerciseLevelValidatedSuccess extends ExerciseLevelState {
+  final List<ExerciseLevelModel> exerciseLevel;
+  final int currentIndex;
+  final String message; // expected "complete"
+
+  ExerciseLevelValidatedSuccess({
+    required this.exerciseLevel,
+    required this.currentIndex,
+    required this.message,
+  });
+}
+
+class ExerciseLevelValidatedFeedback extends ExerciseLevelState {
+  final List<ExerciseLevelModel> exerciseLevel;
+  final int currentIndex;
+  final String feedbackMessage;
+  final String? ttsUrl;
+
+  ExerciseLevelValidatedFeedback({
+    required this.exerciseLevel,
+    required this.currentIndex,
+    required this.feedbackMessage,
+    this.ttsUrl,
+  });
+}

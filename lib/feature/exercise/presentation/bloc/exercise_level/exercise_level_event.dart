@@ -11,3 +11,5 @@ class PostAITranscribe extends ExerciseLevelEvent {
 
   PostAITranscribe({required this.filePath});
 }
+
+class ProceedToNextQuizEvent extends ExerciseLevelEvent {}

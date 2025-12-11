@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -31,6 +33,13 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
   late AnimationController _waveController;
   late Animation<double> _waveAnimation;
   String? _filePath;
+  String _hintBaseText = 'Baca dengan perlahan dan jelas';
+  String _typingText = '';
+  Timer? _typingTimer;
+  
+  // TTS player
+  // You may need to add audioplayers in pubspec.yaml
+  late final AudioPlayer _ttsPlayer;
 
   @override
   void initState() {
@@ -45,6 +54,9 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
       CurvedAnimation(parent: _waveController, curve: Curves.linear),
     );
 
+    // Init TTS player
+    _ttsPlayer = AudioPlayer();
+
     // Panggil Data Awal
     Future.delayed(Duration.zero, () {
       context.read<ExerciseLevelBloc>().add(GetExerciseLevelEvent(levelId: widget.levelId));
@@ -55,6 +67,8 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
   void dispose() {
     _waveController.dispose();
     _audioRecorder.dispose();
+    _typingTimer?.cancel();
+    _ttsPlayer.dispose();
     super.dispose();
   }
 
@@ -156,6 +170,14 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
               SnackBar(content: Text(state.message)),
             );
           }
+          // Feedback: mulai animasi typing dan play TTS jika ada
+          if (state is ExerciseLevelValidatedFeedback) {
+            final feedback = state.feedbackMessage;
+            _startTyping(feedback);
+            if (state.ttsUrl != null && state.ttsUrl!.isNotEmpty) {
+              _playTTS(state.ttsUrl!);
+            }
+          }
         },
         builder: (context, state) {
           // LOADING
@@ -184,7 +206,7 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
             );
           }
 
-          // SUCCESS
+          // SUCCESS (default)
           if (state is ExerciseLevelSuccess) {
             final exercises = state.exerciseLevel;
 
@@ -245,7 +267,133 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
                       const SizedBox(height: 140),
                       _buildMicrophoneButton(),
                       const SizedBox(height: 40),
-                      _buildHintCard(),
+                      _buildHintCard(_hintBaseText),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+          // VALIDATED SUCCESS (complete)
+          if (state is ExerciseLevelValidatedSuccess) {
+            final exercises = state.exerciseLevel;
+
+            final currentIndex = state.currentIndex;
+            if (currentIndex >= exercises.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final currentExercise = exercises[currentIndex];
+
+            return Stack(
+              children: [
+                Positioned(
+                  left: 0, right: 0,
+                  top: MediaQuery.of(context).size.height * 0.378,
+                  child: AnimatedBuilder(
+                    animation: _waveAnimation,
+                    builder: (context, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          final delay = index * 0.2;
+                          final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
+                          final scale = _isRecording ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2)) : 1.0;
+                          return Transform.scale(
+                            scale: scale,
+                            child: Container(
+                              width: 6, height: 20.0,
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(3)),
+                            ),
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      _buildProgressBar(exercises.length, currentIndex),
+                      const Spacer(),
+                      _buildInstructionText(currentExercise.instruction),
+                      const SizedBox(height: 16),
+                      _buildWordText(currentExercise.speechText),
+                      const SizedBox(height: 140),
+                      _buildMicrophoneButton(),
+                      const SizedBox(height: 24),
+                      _buildSuccessContainer(onNext: () {
+                        context.read<ExerciseLevelBloc>().add(ProceedToNextQuizEvent());
+                        // Reset hint typing
+                        _typingTimer?.cancel();
+                        setState(() { _typingText = ''; _hintBaseText = 'Baca dengan perlahan dan jelas'; });
+                      }),
+                      const SizedBox(height: 16),
+                      _buildHintCard(_hintBaseText),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+
+          // VALIDATED FEEDBACK (message bukan complete)
+          if (state is ExerciseLevelValidatedFeedback) {
+            final exercises = state.exerciseLevel;
+
+            final currentIndex = state.currentIndex;
+            if (currentIndex >= exercises.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final currentExercise = exercises[currentIndex];
+
+            final displayed = _typingText.isNotEmpty ? _typingText : state.feedbackMessage;
+
+            return Stack(
+              children: [
+                Positioned(
+                  left: 0, right: 0,
+                  top: MediaQuery.of(context).size.height * 0.378,
+                  child: AnimatedBuilder(
+                    animation: _waveAnimation,
+                    builder: (context, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          final delay = index * 0.2;
+                          final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
+                          final scale = _isRecording ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2)) : 1.0;
+                          return Transform.scale(
+                            scale: scale,
+                            child: Container(
+                              width: 6, height: 20.0,
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(3)),
+                            ),
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      _buildProgressBar(exercises.length, currentIndex),
+                      const Spacer(),
+                      _buildInstructionText(currentExercise.instruction),
+                      const SizedBox(height: 16),
+                      _buildWordText(currentExercise.speechText),
+                      const SizedBox(height: 140),
+                      _buildMicrophoneButton(),
+                      const SizedBox(height: 24),
+                      _buildHintCard(displayed),
                       const Spacer(),
                     ],
                   ),
@@ -312,11 +460,65 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
     );
   }
 
-  Widget _buildHintCard() {
+  Widget _buildHintCard(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(color: AppColor.primaryLight, borderRadius: BorderRadius.circular(12)),
-      child: Text('Baca dengan perlahan dan jelas', style: tsBodyMediumMedium(AppColor.primaryDark), textAlign: TextAlign.center),
+      child: Text(text, style: tsBodyMediumMedium(AppColor.primaryDark), textAlign: TextAlign.center),
     );
+  }
+
+  Widget _buildSuccessContainer({required VoidCallback onNext}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.green.shade100,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green.shade400),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: [
+            Icon(Icons.check_circle, color: Colors.green.shade600),
+            const SizedBox(width: 8),
+            Text('Bagus! Kamu berhasil.', style: tsBodyMediumMedium(Colors.green.shade800)),
+          ]),
+          ElevatedButton(
+            onPressed: onNext,
+            style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
+            child: const Text('Lanjut'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startTyping(String fullText) {
+    _typingTimer?.cancel();
+    setState(() {
+      _typingText = '';
+      _hintBaseText = '';
+    });
+    int i = 0;
+    _typingTimer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
+      if (i <= fullText.length) {
+        setState(() {
+          _typingText = fullText.substring(0, i);
+        });
+        i++;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  Future<void> _playTTS(String url) async {
+    try {
+      await _ttsPlayer.stop();
+      await _ttsPlayer.play(UrlSource(url));
+    } catch (e) {
+      // ignore playback errors
+    }
   }
 }

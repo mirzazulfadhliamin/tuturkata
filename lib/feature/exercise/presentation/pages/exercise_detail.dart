@@ -1,23 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutur_kata/core/theme/color_styles.dart';
 import 'package:tutur_kata/core/theme/text_styles.dart';
 
+import '../bloc/exercise_detail/exercise_detail_bloc.dart';
+import '../bloc/exercise_detail/exercise_detail_event.dart';
+import '../bloc/exercise_detail/exercise_detail_model.dart';
+import '../bloc/exercise_detail/exercise_detail_state.dart';
+
 class ExerciseDetailPage extends StatelessWidget {
-  final int id;
+  final String id;
   final String title;
+  final String desc;
 
   const ExerciseDetailPage({
     super.key,
     required this.id,
     required this.title,
+    required this.desc,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Dispatch the event to fetch exercise details when this page is loaded
+    Future.delayed(Duration.zero, () {
+      print('Dispatching GetExerciseDetailEvent with exerciseId: $id');
+      context.read<ExerciseDetailBloc>().add(GetExerciseDetailEvent(exerciseId: id));
+    });
+
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         backgroundColor: AppColor.white,
         elevation: 0,
         leading: IconButton(
@@ -32,28 +45,95 @@ class ExerciseDetailPage extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFFF7F7FC),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              _buildCategoryCard(),
+        child: BlocBuilder<ExerciseDetailBloc, ExerciseDetailState>(
+          builder: (context, state) {
+            // Loading state
+            if (state is ExerciseDetailLoading) {
+              print('ExerciseDetailLoading state received');
+              return Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.primary,
+                ),
+              );
+            }
 
-              const SizedBox(height: 18),
-              _buildTipsCard(),
+            // Failure state
+            if (state is ExerciseDetailFailure) {
+              print('ExerciseDetailFailure state received: ${state.message}');
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: AppColor.error,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.message,
+                        style: tsBodyMediumRegular(AppColor.textSecondary),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          print('Retrying to fetch exercise detail');
+                          context.read<ExerciseDetailBloc>().add(
+                              GetExerciseDetailEvent(exerciseId: id));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          foregroundColor: AppColor.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Coba Lagi',
+                          style: tsBodyMediumSemiBold(AppColor.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
 
-              const SizedBox(height: 28),
-              _buildLevelList(),
-              const SizedBox(height: 28),
-            ],
-          ),
+            if (state is ExerciseDetailSuccess) {
+              print('ExerciseDetailSuccess state received');
+              final exerciseDetailList = state.exerciseDetail;
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    _buildCategoryCard(desc),
+                    const SizedBox(height: 18),
+                    _buildTipsCard(),
+                    const SizedBox(height: 28),
+                    _buildLevelList(exerciseDetailList),
+                    const SizedBox(height: 28),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox(); // Default case, shouldn't happen
+          },
         ),
       ),
     );
   }
 
-
-  // CATEGORY CARD ---------------------------------------------------
-  Widget _buildCategoryCard() {
+  Widget _buildCategoryCard(String title) {
+    print('Building category card with title: $title');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
@@ -78,17 +158,17 @@ class ExerciseDetailPage extends StatelessWidget {
           const SizedBox(width: 18),
           Expanded(
             child: Text(
-              "Latihan pengucapan kata dasar",
-              style: tsTitleSmallSemiBold(Colors.white),
+              title,
+              style: tsTitleSmallRegular(Colors.white),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // TIPS CARD -------------------------------------------------------
   Widget _buildTipsCard() {
+    print('Building tips card');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(18),
@@ -117,53 +197,21 @@ class ExerciseDetailPage extends StatelessWidget {
     );
   }
 
-  // LEVEL LIST -----------------------------------------------------
-  Widget _buildLevelList() {
+  Widget _buildLevelList(List<ExerciseDetailModel> exerciseDetailList) {
+    print('Building level list with ${exerciseDetailList.length} items');
     return Column(
       children: [
-        _buildLevelItem(
-          level: 1,
-          title: "Level 1 - Pemula",
-          subtitle: "Kata-kata sederhana",
-          stars: 3,
-          locked: false,
-        ),
-        _buildDividerLine(false),
-
-        _buildLevelItem(
-          level: 2,
-          title: "Level 2 - Dasar",
-          subtitle: "Kata-kata umum",
-          stars: 2,
-          locked: false,
-        ),
-        _buildDividerLine(false),
-
-        _buildLevelItem(
-          level: 3,
-          title: "Level 3 - Menengah",
-          subtitle: "Kata-kata pendek",
-          stars: 1,
-          locked: false,
-        ),
-        _buildDividerLine(false),
-
-        _buildLevelItem(
-          level: 4,
-          title: "Level 4 - Lanjutan",
-          subtitle: "Kata-kata kompleks",
-          stars: 0,
-          locked: true,
-        ),
-        _buildDividerLine(true),
-
-        _buildLevelItem(
-          level: 5,
-          title: "Level 5 - Mahir",
-          subtitle: "Kata-kata lengkap",
-          stars: 0,
-          locked: true,
-        ),
+        for (var i = 0; i < exerciseDetailList.length; i++) ...[
+          _buildLevelItem(
+            level: exerciseDetailList[i].order,
+            title: "Level ${exerciseDetailList[i].order} - ${exerciseDetailList[i].title}",
+            subtitle: exerciseDetailList[i].desc,
+            stars: exerciseDetailList[i].star,
+            locked: i != 0 && !exerciseDetailList[i - 1].isCompleted,
+          ),
+          if (i != exerciseDetailList.length - 1)
+            _buildDividerLine(i != 0 && !exerciseDetailList[i - 1].isCompleted),
+        ],
       ],
     );
   }
@@ -183,11 +231,12 @@ class ExerciseDetailPage extends StatelessWidget {
     required int stars,
     required bool locked,
   }) {
+    print('Building level item for Level $level');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: locked ?  AppColor.silver : AppColor.white,
+        color: locked ? AppColor.silver : AppColor.white,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -201,21 +250,7 @@ class ExerciseDetailPage extends StatelessWidget {
               ? const SizedBox.shrink()
               : Row(
             children: [
-              Transform.translate(
-                offset: stars == 3
-                    ? const Offset(0, -12)
-                    : Offset.zero,
-                child: _buildStars(stars),
-              ),
-              if (stars == 3) ...[
-                const SizedBox(width: 8),
-                SvgPicture.asset(
-                  'assets/svg/trophy.svg',
-                  color: AppColor.gold,
-                  width: 20,
-                  height: 20,
-                ),
-              ],
+              _buildStars(stars),
             ],
           ),
         ],
@@ -245,26 +280,22 @@ class ExerciseDetailPage extends StatelessWidget {
     );
   }
 
-
   Widget _buildLevelTexts(String title, String subtitle, bool locked) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: tsTitleSmallRegular(
-         AppColor.textPrimary,
-          ),
+          style: tsBodySmallRegular(AppColor.textPrimary),
         ),
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: tsBodyMediumRegular(AppColor.textSecondary),
+          style: tsLabelLargeRegular(AppColor.textSecondary),
         ),
       ],
     );
   }
-
 
   Widget _buildStars(int count) {
     return Row(
@@ -272,7 +303,7 @@ class ExerciseDetailPage extends StatelessWidget {
         count,
             (index) => const Icon(
           Icons.star_rounded,
-          color: AppColor.gold  ,
+          color: AppColor.gold,
           size: 20,
         ),
       ),

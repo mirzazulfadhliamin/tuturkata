@@ -24,4 +24,38 @@ class ApiService {
     );
   }
 
+  Future<Response> getSummaryWeekly(String token) async {
+    return await _dio.get(
+      "/progress/summary-weekly",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+
+  Future<Response> getUserExercise(String token) async {
+    return await _dio.get(
+      "/user-exercises/",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+
+  Future<Response> getUserExerciseDetail(String token, String exerciseId) async {
+    return await _dio.get(
+      "/user-levels/$exerciseId",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+
+
 }

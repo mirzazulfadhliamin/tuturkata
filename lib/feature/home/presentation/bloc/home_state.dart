@@ -47,3 +47,12 @@ class HomeLoaded extends HomeState {
     daysLeftInWeek,
   ];
 }
+
+class HomeFailure extends HomeState {
+  final String message;
+  const HomeFailure(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+

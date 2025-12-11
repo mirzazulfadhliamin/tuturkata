@@ -1,25 +1,44 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import 'home_repository.dart';
+
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
-    on<LoadHomeData>((event, emit) async {
-      emit(HomeLoading());
-      await Future.delayed(const Duration(seconds: 2)); // Simulasi loading
-      emit(const HomeLoaded(
-        streakDays: 8,
-        totalXP: 1240,
-        completedSessions: 32,
-        accuracy: 86,
-        completedDailyMissions: 1,
-        totalDailyMissions: 3,
-        weeklyChallengeProgress: 14,
-        weeklyChallengeTotal: 20,
-        daysLeftInWeek: 3,
+  final HomeRepository repository;
+
+  HomeBloc(this.repository) : super(HomeInitial()) {
+    on<LoadHomeData>(_onLoadData);
+  }
+
+  Future<void> _onLoadData(
+      LoadHomeData event,
+      Emitter<HomeState> emit,
+      ) async {
+    emit(HomeLoading());
+
+    try {
+      final data = await repository.getWeeklySummary();
+
+      emit(HomeLoaded(
+        streakDays: data["streak"] ?? 0,
+        totalXP: data["exp"] ?? 0,
+        completedSessions: data["exercise_total"] ?? 0,
+        accuracy: data["accuration"] ?? 0,
+
+        // UI kamu butuh ini, tapi API tidak punya.
+        // Jadi kita isi default agar UI tetap jalan.
+        completedDailyMissions: 0,
+        totalDailyMissions: 0,
+        weeklyChallengeProgress: 0,
+        weeklyChallengeTotal: 0,
+        daysLeftInWeek: 0,
       ));
-    });
+
+    } catch (e) {
+      emit(HomeFailure(e.toString()));
+    }
   }
 }

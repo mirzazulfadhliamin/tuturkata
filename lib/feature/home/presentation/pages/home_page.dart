@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColor.background,  // ✔ pakai theme
+          backgroundColor: AppColor.background,
           body: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -173,9 +173,9 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 30),
 
           WeeklyChallengeCard(
-            progress: state.weeklyChallengeProgress,
-            total: state.weeklyChallengeTotal,
-            daysLeft: state.daysLeftInWeek,
+            progress: 7,
+            total: 15,
+            daysLeft: 3,
           ),
 
           const SizedBox(height: 30),

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutur_kata/feature/auth/presentation/pages/login_page.dart';
 import 'package:tutur_kata/feature/auth/presentation/pages/register_page.dart';
 import 'package:tutur_kata/feature/exercise/presentation/pages/exercise_page.dart';
+import 'package:tutur_kata/feature/profile/presentation/pages/profile.dart';
 import '../../feature/home/presentation/pages/home_page.dart';
 
 class AppRoute {
@@ -22,7 +23,7 @@ class AppRoute {
               final prefs = snapshot.data!;
               final token = prefs.getString('access_token');
 
-              return token != null ? const HomePage() : LoginPage();
+              return token != null ? HomePage() : LoginPage();
             },
           ),
         );

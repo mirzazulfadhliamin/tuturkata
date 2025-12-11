@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../../feature/profile/data/user_profile_model.dart';
+
 class ApiService {
   final Dio _dio = Dio(BaseOptions(
     baseUrl: "https://tuturkata-api-v1.syahranfd.cloud/api",
@@ -71,6 +73,17 @@ class ApiService {
   Future<Response> getNextLevel(String token) async {
     return await _dio.get(
       '/user-levels/next',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      ),
+    );
+  }
+  Future<Response> getUserProfile(String token) async {
+    return await _dio.get(
+      '/users/me',
       options: Options(
         headers: {
           "Authorization": "Bearer $token",

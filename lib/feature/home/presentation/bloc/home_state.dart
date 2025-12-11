@@ -16,35 +16,33 @@ class HomeLoaded extends HomeState {
   final int totalXP;
   final int completedSessions;
   final int accuracy;
-  final int completedDailyMissions;
-  final int totalDailyMissions;
-  final int weeklyChallengeProgress;
-  final int weeklyChallengeTotal;
-  final int daysLeftInWeek;
+
+  final List<DailyMission> missions;
+
+  final String subtitleNextLevel;
+  final String nextLevelId;
+  final String nextExerciseId;
 
   const HomeLoaded({
     required this.streakDays,
     required this.totalXP,
     required this.completedSessions,
     required this.accuracy,
-    required this.completedDailyMissions,
-    required this.totalDailyMissions,
-    required this.weeklyChallengeProgress,
-    required this.weeklyChallengeTotal,
-    required this.daysLeftInWeek,
+    required this.missions,
+    required this.subtitleNextLevel,
+    required this.nextLevelId,
+    required this.nextExerciseId,
   });
-
   @override
   List<Object> get props => [
     streakDays,
     totalXP,
     completedSessions,
     accuracy,
-    completedDailyMissions,
-    totalDailyMissions,
-    weeklyChallengeProgress,
-    weeklyChallengeTotal,
-    daysLeftInWeek,
+    missions,
+    subtitleNextLevel,
+    nextLevelId,
+    nextExerciseId,
   ];
 }
 
@@ -55,4 +53,15 @@ class HomeFailure extends HomeState {
   @override
   List<Object> get props => [message];
 }
+
+class NextLevelSuccess extends HomeState {
+  final Map<String, dynamic> data;
+  NextLevelSuccess(this.data);
+}
+
+class NextLevelFailure extends HomeState {
+  final String message;
+  NextLevelFailure(this.message);
+}
+
 

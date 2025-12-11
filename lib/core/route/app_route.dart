@@ -22,7 +22,7 @@ class AppRoute {
               final prefs = snapshot.data!;
               final token = prefs.getString('access_token');
 
-              return token != null ? const ExercisePage() : LoginPage();
+              return token != null ? const HomePage() : LoginPage();
             },
           ),
         );

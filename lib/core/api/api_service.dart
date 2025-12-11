@@ -90,4 +90,16 @@ class ApiService {
     }
   }
 
+  Future<Response> getNextLevel(String token) async {
+    return await _dio.get(
+      '/user-levels/next',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      ),
+    );
+  }
+
 }

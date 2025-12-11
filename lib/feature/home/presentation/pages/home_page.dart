@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                     BlendMode.srcIn,
                   ),
                 ),
-                label: 'Hari Berturut',
+                label: 'Streak',
               ),
               StatItem(
                 title: 'XP',
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                     BlendMode.srcIn,
                   ),
                 ),
-                label: 'Sesi Selesai',
+                label: 'Sesi',
               ),
               StatItem(
                 title: 'Accuracy',

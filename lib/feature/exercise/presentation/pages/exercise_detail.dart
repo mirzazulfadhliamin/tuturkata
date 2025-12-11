@@ -33,15 +33,20 @@ class ExerciseDetailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor.white,
         elevation: 0,
+        toolbarHeight: 100,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColor.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           "Latihan $title",
-          style: tsTitleSmallRegular(AppColor.textPrimary),
+          style: tsBodyLargeMedium(AppColor.textPrimary),
         ),
         centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(height: 1, color: Colors.black12.withOpacity(0.06)),
+        ),
       ),
       backgroundColor: const Color(0xFFF7F7FC),
       body: SafeArea(
@@ -134,7 +139,7 @@ class ExerciseDetailPage extends StatelessWidget {
     print('Building category card with title: $title');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: AppColor.gradientVertical(AppColor.primary, AppColor.primaryMedium),
         borderRadius: BorderRadius.circular(20),
@@ -142,14 +147,14 @@ class ExerciseDetailPage extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.3),
               borderRadius: BorderRadius.circular(14),
             ),
             child: const Icon(
               CupertinoIcons.book,
-              size: 36,
+              size: 28,
               color: Colors.white,
             ),
           ),
@@ -157,7 +162,7 @@ class ExerciseDetailPage extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: tsTitleSmallSemiBold(Colors.white),
+              style: tsBodyLargeMedium(Colors.white),
             ),
           ),
         ],
@@ -169,7 +174,7 @@ class ExerciseDetailPage extends StatelessWidget {
     print('Building tips card');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -184,11 +189,11 @@ class ExerciseDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Tips", style: tsBodyLargeSemiBold(AppColor.textPrimary)),
+          Text("Tips", style: tsBodyMediumSemiBold(AppColor.textPrimary)),
           const SizedBox(height: 6),
           Text(
             "Selesaikan setiap level dengan minimal 2 bintang untuk membuka level selanjutnya. Dapatkan 3 bintang untuk reward maksimal!",
-            style: tsBodyMediumRegular(AppColor.textSecondary),
+            style: tsLabelLargeRegular(AppColor.textSecondary),
           ),
         ],
       ),
@@ -266,8 +271,8 @@ class ExerciseDetailPage extends StatelessWidget {
 
   Widget _buildLevelBadge(int level, bool locked) {
     return Container(
-      width: 48,
-      height: 48,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
         color: locked ? AppColor.grayBlue : AppColor.primary,
         borderRadius: BorderRadius.circular(8),
@@ -277,11 +282,11 @@ class ExerciseDetailPage extends StatelessWidget {
           ? const Icon(
         CupertinoIcons.lock,
         color: AppColor.grayDark,
-        size: 22,
+        size: 20,
       )
           : Text(
         "Lv.$level",
-        style: tsBodyMediumSemiBold(Colors.white),
+        style: tsBodySmallSemiBold(Colors.white),
       ),
     );
   }
@@ -292,12 +297,12 @@ class ExerciseDetailPage extends StatelessWidget {
       children: [
         Text(
           title,
-          style: tsBodySmallRegular(AppColor.textPrimary),
+          style: tsBodySmallMedium(AppColor.textPrimary),
         ),
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: tsBodyMediumRegular(AppColor.textSecondary),
+          style: tsLabelLargeRegular(AppColor.textSecondary),
         ),
       ],
     );
@@ -308,10 +313,10 @@ class ExerciseDetailPage extends StatelessWidget {
       children: List.generate(
         count,
             (index) => const Icon(
-          Icons.star_rounded,
-          color: AppColor.gold,
-          size: 20,
-        ),
+              Icons.star_rounded,
+              color: AppColor.gold,
+              size: 18,
+            ),
       ),
     );
   }

@@ -31,7 +31,7 @@ class StatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(21, 21, 21, 16),
+      padding: const EdgeInsets.all(24),
       decoration: _cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class StatsCard extends StatelessWidget {
             children: [
               Text(
                   'Minggu Ini',
-                  style: tsBodyLargeRegular(AppColor.textPrimary)
+                  style: tsBodyMediumRegular(AppColor.textPrimary)
               ),
             ],
           ),
@@ -121,7 +121,7 @@ class StatsCard extends StatelessWidget {
   Widget _buildValue(StatItem stat) {
     return Text(
       stat.value,
-      style: tsTitleSmallRegular(AppColor.textPrimary),
+      style: tsBodyMediumRegular(AppColor.textPrimary),
       textAlign: TextAlign.center,
     );
   }

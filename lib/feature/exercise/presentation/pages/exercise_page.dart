@@ -188,18 +188,18 @@ class ExercisePage extends StatelessWidget {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Pilih Kategori Latihan",
-            style: tsTitleSmallRegular(AppColor.textPrimary),
+            style: tsBodyLargeMedium(AppColor.textPrimary),
           ),
           const SizedBox(height: 6),
           Text(
             "Setiap kategori memiliki 4 level dari mudah ke sulit",
-            style: tsBodyMediumRegular(AppColor.textSecondary),
+            style: tsBodySmallRegular(AppColor.textSecondary),
           ),
         ],
       ),

@@ -87,12 +87,12 @@ class LearningCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: tsBodyLargeRegular(AppColor.textPrimary)
+                style: tsBodySmallMedium(AppColor.textPrimary)
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: tsBodyMediumRegular(AppColor.textHint)
+                style: tsBodySmallRegular(AppColor.gray)
               ),
             ],
           ),

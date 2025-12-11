@@ -23,6 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       final summary = await repository.getWeeklySummary();
       final missions = await repository.getDailyMissions();
+      final nextLevel = await repository.getNextLevel();
 
       emit(HomeLoaded(
         streakDays: summary["streak"] ?? 0,
@@ -30,6 +31,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         completedSessions: summary["exercise_total"] ?? 0,
         accuracy: summary["accuration"] ?? 0,
         missions: missions,
+        subtitleNextLevel: nextLevel.title,
+        nextLevelId: nextLevel.levelId,
+        nextExerciseId: nextLevel.exerciseId,
       ));
 
     } catch (e) {

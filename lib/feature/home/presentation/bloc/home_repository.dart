@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/api/api_service.dart';
 import '../../data/daily_mission_model.dart';
@@ -28,4 +29,23 @@ class HomeRepository {
 
     return data.map((e) => DailyMission.fromJson(e)).toList();
   }
+
+  Future<NextLevelModel> getNextLevel() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw Exception("Token not found");
+    }
+
+    try {
+      final response = await _api.getNextLevel(token);
+
+      return NextLevelModel.fromJson(response.data);
+
+    } catch (e) {
+      throw Exception("Failed to fetch next level: $e");
+    }
+  }
+
 }

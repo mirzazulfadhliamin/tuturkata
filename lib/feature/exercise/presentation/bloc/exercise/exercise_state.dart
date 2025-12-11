@@ -7,17 +7,13 @@ class ExerciseInitial extends ExerciseState {}
 class ExerciseLoading extends ExerciseState {}
 
 class ExerciseSuccess extends ExerciseState {
-  final List<ExerciseModel> exercises;
+  final List<ExerciseModel> exercise;
 
-  ExerciseSuccess({
-    required this.exercises
-  });
+  ExerciseSuccess({required this.exercise});
 }
 
 class ExerciseFailure extends ExerciseState {
   final String message;
 
-  ExerciseFailure({
-    required this.message
-  });
+  ExerciseFailure({required this.message});
 }

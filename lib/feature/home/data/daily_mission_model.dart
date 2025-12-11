@@ -23,3 +23,31 @@ class DailyMission {
     );
   }
 }
+
+class NextLevelModel {
+  final String exerciseId;
+  final String levelId;
+  final String title;
+
+  NextLevelModel({
+    required this.exerciseId,
+    required this.levelId,
+    required this.title,
+  });
+
+  factory NextLevelModel.fromJson(Map<String, dynamic> json) {
+    return NextLevelModel(
+      exerciseId: json['exercise_id'] ?? '',
+      levelId: json['level_id'] ?? '',
+      title: json['title'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'exercise_id': exerciseId,
+      'level_id': levelId,
+      'title': title,
+    };
+  }
+}

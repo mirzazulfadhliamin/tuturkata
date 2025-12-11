@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tutur_kata/feature/exercise/presentation/pages/exercise_page.dart';
 
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/continue_learning_card.dart';
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/daily_missions.dart';
@@ -11,6 +12,8 @@ import 'package:tutur_kata/feature/home/presentation/pages/widgets/stats_card.da
 import 'package:tutur_kata/feature/home/presentation/pages/widgets/weekly_challenge_card.dart';
 
 import '../../../../../core/theme/color_styles.dart';
+import '../../../exercise/presentation/pages/exercise_detail.dart';
+import '../../../exercise/presentation/pages/exercise_level.dart';
 import '../bloc/home_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -66,8 +69,15 @@ class _HomePageState extends State<HomePage> {
 
           ContinueLearningCard(
             title: 'Lanjutkan Belajar',
-            subtitle: 'Membaca Kata - Level 3',
-            onTap: () {},
+            subtitle: state.subtitleNextLevel,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ExerciseLevelPage(),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 30),
 

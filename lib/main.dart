@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tutur_kata/feature/auth/presentation/bloc/auth_bloc.dart';
-import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise_bloc.dart';
+import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise/exercise_bloc.dart';
+import 'package:tutur_kata/feature/exercise/presentation/bloc/exercise_detail/exercise_detail_bloc.dart';
 import 'core/bloc/test.dart';
 
 import 'core/route/app_route.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
         BlocProvider<HomeBloc>(create: (context) => HomeBloc(HomeRepository()),),
         BlocProvider<ExerciseBloc>(create: (context) => di.sl<ExerciseBloc>()),
+        BlocProvider<ExerciseDetailBloc>(create: (context) => di.sl<ExerciseDetailBloc>()),
       ],
       child: MaterialApp(
         title: "Flutter BLoC Setup",

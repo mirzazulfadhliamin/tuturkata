@@ -1,4 +1,4 @@
-import '../../../../core/api/api_service.dart';
+import '../../../../../core/api/api_service.dart';
 import 'exercise_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,20 +8,20 @@ class ExerciseRepository {
   Future<List<ExerciseModel>> getUserExercises() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final token = prefs.getString('access_token');
 
       if (token == null || token.isEmpty) {
         throw Exception("Token not found");
       }
 
-      final response = await _apiService.getUserExercises(token);
+      final response = await _apiService.getUserExercise(token);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = await response.data;
-        final exercises = (data as List)
+        final exercise = (data as List)
             .map((json) => ExerciseModel.fromJson(json))
             .toList();
-        return exercises;
+        return exercise;
       } else {
         throw Exception('Failed to load exercises');
       }

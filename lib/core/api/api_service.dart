@@ -35,7 +35,7 @@ class ApiService {
     );
   }
 
-  Future<Response> getUserExercises(String token) async {
+  Future<Response> getUserExercise(String token) async {
     return await _dio.get(
       "/user-exercises/",
       options: Options(
@@ -45,9 +45,32 @@ class ApiService {
       ),
     );
   }
+
+  Future<Response> getUserExerciseDetail(String token, String exerciseId) async {
+    return await _dio.get(
+      "/user-levels/$exerciseId",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+
   Future<Response> getDailyMissions(String token) async{
     return await _dio.get(
       "/daily-missions/",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      ),
+    );
+  }
+  Future<Response> getNextLevel(String token) async {
+    return await _dio.get(
+      '/user-levels/next',
       options: Options(
         headers: {
           "Authorization": "Bearer $token",

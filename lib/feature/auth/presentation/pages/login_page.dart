@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/color_styles.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../../home/presentation/pages/home_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_repository.dart';
@@ -54,14 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (state is AuthSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Login berhasil!")),
-          );
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => HomePage()),
-          );
+          Navigator.pushReplacementNamed(context, "/home");
         }
 
         if (state is AuthFailure) {

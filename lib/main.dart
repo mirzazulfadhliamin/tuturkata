@@ -8,6 +8,7 @@ import 'core/bloc/test.dart';
 import 'core/route/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'feature/home/presentation/bloc/home_bloc.dart';
+import 'feature/home/presentation/bloc/home_repository.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -26,8 +27,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ExampleBloc>(create: (_) => di.sl<ExampleBloc>()),
         BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
-        BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
-        BlocProvider<ExerciseBloc>(create: (_) => di.sl<ExerciseBloc>()),
+        BlocProvider<HomeBloc>(create: (context) => HomeBloc(HomeRepository()),),
+        BlocProvider<ExerciseBloc>(create: (context) => di.sl<ExerciseBloc>()),
       ],
       child: MaterialApp(
         title: "Flutter BLoC Setup",
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 
 

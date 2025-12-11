@@ -13,4 +13,14 @@ class AuthRepository {
 
     return token;
   }
+
+  Future<Map<String, dynamic>> register(
+      String username, String email, String password) async {
+    final response = await _apiService.postRegister(
+      username,
+      email,
+      password,
+    );
+    return response.data;
+  }
 }

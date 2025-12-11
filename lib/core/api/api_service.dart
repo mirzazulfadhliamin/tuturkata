@@ -45,4 +45,16 @@ class ApiService {
       ),
     );
   }
+  Future<Response> getDailyMissions(String token) async{
+    return await _dio.get(
+      "/daily-missions/",
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      ),
+    );
+  }
 }
+

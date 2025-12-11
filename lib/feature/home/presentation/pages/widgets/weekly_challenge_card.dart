@@ -111,6 +111,7 @@ class WeeklyChallengeCard extends StatelessWidget {
 
               /// PROGRESS BAR
               Container(
+                width: double.infinity,
                 height: 12,
                 decoration: BoxDecoration(
                   color: AppColor.white.withOpacity(0.2),
@@ -118,7 +119,7 @@ class WeeklyChallengeCard extends StatelessWidget {
                 ),
                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,
-                  widthFactor: percentage,
+                  widthFactor: percentage.clamp(0.0, 1.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColor.white,

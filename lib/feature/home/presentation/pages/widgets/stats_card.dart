@@ -42,26 +42,6 @@ class StatsCard extends StatelessWidget {
                   'Minggu Ini',
                   style: tsBodyLargeRegular(AppColor.textPrimary)
               ),
-              Spacer(),
-              GestureDetector(
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
-
-                  if (pickedDate != null) {
-
-                  }
-                },
-                child: Icon(
-                  Icons.calendar_today_outlined,
-                  size: 20,
-                  color: AppColor.gray,
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 16),

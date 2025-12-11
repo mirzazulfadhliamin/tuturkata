@@ -16,22 +16,15 @@ class HomeLoaded extends HomeState {
   final int totalXP;
   final int completedSessions;
   final int accuracy;
-  final int completedDailyMissions;
-  final int totalDailyMissions;
-  final int weeklyChallengeProgress;
-  final int weeklyChallengeTotal;
-  final int daysLeftInWeek;
+
+  final List<DailyMission> missions;
 
   const HomeLoaded({
     required this.streakDays,
     required this.totalXP,
     required this.completedSessions,
     required this.accuracy,
-    required this.completedDailyMissions,
-    required this.totalDailyMissions,
-    required this.weeklyChallengeProgress,
-    required this.weeklyChallengeTotal,
-    required this.daysLeftInWeek,
+    required this.missions,
   });
 
   @override
@@ -40,11 +33,7 @@ class HomeLoaded extends HomeState {
     totalXP,
     completedSessions,
     accuracy,
-    completedDailyMissions,
-    totalDailyMissions,
-    weeklyChallengeProgress,
-    weeklyChallengeTotal,
-    daysLeftInWeek,
+    missions,
   ];
 }
 

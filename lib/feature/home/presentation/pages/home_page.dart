@@ -143,31 +143,17 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 30),
 
           DailyMissions(
-            missions: [
-              MissionItem(
-                title: 'Selesaikan 2 latihan',
-                progress: '1/2',
-                current: 1,
-                total: 2,
-                completed: false,
-              ),
-              MissionItem(
-                title: 'Latihan 10 menit',
-                progress: '7/10',
-                current: 7,
-                total: 10,
-                completed: false,
-              ),
-              MissionItem(
-                title: 'Capai akurasi 80%',
-                progress: '80/80',
-                current: 80,
-                total: 80,
-                completed: true,
-              ),
-            ],
-            completedCount: state.completedDailyMissions,
-            totalCount: state.totalDailyMissions,
+            missions: state.missions.map((m) {
+              return MissionItem(
+                title: m.title,
+                progress: "${m.currentProgress}/${m.maxProgress}",
+                current: m.currentProgress,
+                total: m.maxProgress,
+                completed: m.isCompleted,
+              );
+            }).toList(),
+            completedCount: state.missions.where((m) => m.isCompleted).length,
+            totalCount: state.missions.length,
           ),
 
           const SizedBox(height: 30),

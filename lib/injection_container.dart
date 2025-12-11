@@ -17,12 +17,5 @@ Future<void> init() async {
 
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl<AuthRepository>()));
   sl.registerFactory<ExerciseBloc>(() => ExerciseBloc(sl<ExerciseRepository>()));
-
-  sl.registerFactory<AuthBloc>(
-        () => AuthBloc(sl<AuthRepository>()),
-  );
-
-  sl.registerFactory<HomeBloc>(
-        () => HomeBloc(sl<HomeRepository>()),
-  );
+  sl.registerFactory<HomeBloc>(() => HomeBloc(sl<HomeRepository>()));
 }

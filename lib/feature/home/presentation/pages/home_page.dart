@@ -173,9 +173,9 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 30),
 
           WeeklyChallengeCard(
-            progress: state.weeklyChallengeProgress,
-            total: state.weeklyChallengeTotal,
-            daysLeft: state.daysLeftInWeek,
+            progress: 7,
+            total: 15,
+            daysLeft: 3,
           ),
 
           const SizedBox(height: 30),

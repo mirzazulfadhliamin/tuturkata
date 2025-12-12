@@ -13,6 +13,7 @@ import '../bloc/exercise_level/exercise_level_bloc.dart';
 import '../bloc/exercise_level/exercise_level_event.dart';
 import '../bloc/exercise_level/exercise_level_state.dart';
 import 'exercise_complete.dart';
+import '../bloc/exercise_level/exercise_level_model.dart';
 
 class ExerciseLevelPage extends StatefulWidget {
   final String levelId;
@@ -36,6 +37,9 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
   String _hintBaseText = 'Baca dengan perlahan dan jelas';
   String _typingText = '';
   Timer? _typingTimer;
+  // Cache state sukses terakhir untuk tampilan saat loading analisa
+  List<ExerciseLevelModel>? _cachedExercises;
+  int _cachedIndex = 0;
   
   // TTS player
   // You may need to add audioplayers in pubspec.yaml
@@ -182,6 +186,33 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
         builder: (context, state) {
           // LOADING
           if (state is ExerciseLevelLoading) {
+            // Jika ada cache (berarti loading analisa), tampilkan UI dengan teks "Menganalisa..."
+            if (_cachedExercises != null && _cachedExercises!.isNotEmpty) {
+              final exercises = _cachedExercises!;
+              final currentIndex = _cachedIndex;
+              final currentExercise = exercises[currentIndex];
+
+              return Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    _buildProgressBar(exercises.length, currentIndex),
+                    const Spacer(),
+                    _buildInstructionText(currentExercise.instruction),
+                    const SizedBox(height: 16),
+                    _buildWordText(currentExercise.speechText),
+                    const SizedBox(height: 24),
+                    _buildWaveBars(),
+                    const SizedBox(height: 24),
+                    _buildMicrophoneButton(),
+                    const SizedBox(height: 12),
+                    _buildAnalyzingText(),
+                    const Spacer(),
+                  ],
+                ),
+              );
+            }
+            // Loading awal tanpa cache
             return Center(child: CircularProgressIndicator(color: AppColor.primary));
           }
 
@@ -210,6 +241,10 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
           if (state is ExerciseLevelSuccess) {
             final exercises = state.exerciseLevel;
 
+            // Simpan cache untuk digunakan saat loading analisa
+            _cachedExercises = exercises;
+            _cachedIndex = state.currentIndex;
+
             if (exercises.isEmpty) {
               return const Center(child: Text("Data latihan kosong."));
             }
@@ -224,60 +259,33 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
 
             final currentExercise = exercises[currentIndex];
 
-            return Stack(
-              children: [
-                // Animasi Gelombang
-                Positioned(
-                  left: 0, right: 0,
-                  top: MediaQuery.of(context).size.height * 0.378,
-                  child: AnimatedBuilder(
-                    animation: _waveAnimation,
-                    builder: (context, child) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          final delay = index * 0.2;
-                          final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
-                          final scale = _isRecording ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2)) : 1.0;
-                          return Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              width: 6, height: 20.0,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(3)),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                ),
-
-                // Konten Utama
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      _buildProgressBar(exercises.length, currentIndex),
-                      const Spacer(),
-                      _buildInstructionText(currentExercise.instruction),
-                      const SizedBox(height: 16),
-                      // Teks Soal (Pa, Ba, Ta, dst)
-                      _buildWordText(currentExercise.speechText),
-                      const SizedBox(height: 140),
-                      _buildMicrophoneButton(),
-                      const SizedBox(height: 40),
-                      _buildHintCard(_hintBaseText),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
-              ],
+            return Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  _buildProgressBar(exercises.length, currentIndex),
+                  const Spacer(),
+                  _buildInstructionText(currentExercise.instruction),
+                  const SizedBox(height: 16),
+                  // Teks Soal (Pa, Ba, Ta, dst)
+                  _buildWordText(currentExercise.speechText),
+                  const SizedBox(height: 24),
+                  _buildWaveBars(),
+                  const SizedBox(height: 24),
+                  _buildMicrophoneButton(),
+                  const SizedBox(height: 40),
+                  const Spacer(),
+                ],
+              ),
             );
           }
           // VALIDATED SUCCESS (complete)
           if (state is ExerciseLevelValidatedSuccess) {
             final exercises = state.exerciseLevel;
+
+            // Simpan cache juga di success
+            _cachedExercises = exercises;
+            _cachedIndex = state.currentIndex;
 
             final currentIndex = state.currentIndex;
             if (currentIndex >= exercises.length) {
@@ -285,65 +293,40 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
             }
             final currentExercise = exercises[currentIndex];
 
-            return Stack(
-              children: [
-                Positioned(
-                  left: 0, right: 0,
-                  top: MediaQuery.of(context).size.height * 0.378,
-                  child: AnimatedBuilder(
-                    animation: _waveAnimation,
-                    builder: (context, child) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          final delay = index * 0.2;
-                          final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
-                          final scale = _isRecording ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2)) : 1.0;
-                          return Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              width: 6, height: 20.0,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(3)),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      _buildProgressBar(exercises.length, currentIndex),
-                      const Spacer(),
-                      _buildInstructionText(currentExercise.instruction),
-                      const SizedBox(height: 16),
-                      _buildWordText(currentExercise.speechText),
-                      const SizedBox(height: 140),
-                      _buildMicrophoneButton(),
-                      const SizedBox(height: 24),
-                      _buildSuccessContainer(onNext: () {
-                        context.read<ExerciseLevelBloc>().add(ProceedToNextQuizEvent());
-                        // Reset hint typing
-                        _typingTimer?.cancel();
-                        setState(() { _typingText = ''; _hintBaseText = 'Baca dengan perlahan dan jelas'; });
-                      }),
-                      const SizedBox(height: 16),
-                      _buildHintCard(_hintBaseText),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
-              ],
+            return Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  _buildProgressBar(exercises.length, currentIndex),
+                  const Spacer(),
+                  _buildInstructionText(currentExercise.instruction),
+                  const SizedBox(height: 16),
+                  _buildWordText(currentExercise.speechText),
+                  const SizedBox(height: 24),
+                  _buildWaveBars(),
+                  const SizedBox(height: 24),
+                  _buildMicrophoneButton(),
+                  const SizedBox(height: 24),
+                  _buildSuccessContainer(onNext: () {
+                    context.read<ExerciseLevelBloc>().add(ProceedToNextQuizEvent());
+                    // Reset hint typing
+                    _typingTimer?.cancel();
+                    setState(() { _typingText = ''; _hintBaseText = 'Baca dengan perlahan dan jelas'; });
+                  }),
+                  // Hint tidak ditampilkan pada success; hanya saat feedback
+                  const Spacer(),
+                ],
+              ),
             );
           }
 
           // VALIDATED FEEDBACK (message bukan complete)
           if (state is ExerciseLevelValidatedFeedback) {
             final exercises = state.exerciseLevel;
+
+            // Update cache untuk skenario berikutnya
+            _cachedExercises = exercises;
+            _cachedIndex = state.currentIndex;
 
             final currentIndex = state.currentIndex;
             if (currentIndex >= exercises.length) {
@@ -353,52 +336,24 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
 
             final displayed = _typingText.isNotEmpty ? _typingText : state.feedbackMessage;
 
-            return Stack(
-              children: [
-                Positioned(
-                  left: 0, right: 0,
-                  top: MediaQuery.of(context).size.height * 0.378,
-                  child: AnimatedBuilder(
-                    animation: _waveAnimation,
-                    builder: (context, child) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          final delay = index * 0.2;
-                          final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
-                          final scale = _isRecording ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2)) : 1.0;
-                          return Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              width: 6, height: 20.0,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(3)),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      _buildProgressBar(exercises.length, currentIndex),
-                      const Spacer(),
-                      _buildInstructionText(currentExercise.instruction),
-                      const SizedBox(height: 16),
-                      _buildWordText(currentExercise.speechText),
-                      const SizedBox(height: 140),
-                      _buildMicrophoneButton(),
-                      const SizedBox(height: 24),
-                      _buildHintCard(displayed),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
-              ],
+            return Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  _buildProgressBar(exercises.length, currentIndex),
+                  const Spacer(),
+                  _buildInstructionText(currentExercise.instruction),
+                  const SizedBox(height: 16),
+                  _buildWordText(currentExercise.speechText),
+                  const SizedBox(height: 24),
+                  _buildWaveBars(),
+                  const SizedBox(height: 24),
+                  _buildMicrophoneButton(),
+                  const SizedBox(height: 24),
+                  _buildHintCard(displayed),
+                  const Spacer(),
+                ],
+              ),
             );
           }
 
@@ -436,7 +391,37 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
   }
 
   Widget _buildWordText(String speechText) {
-    return Text(speechText, style: tsHeadingLargeBold(AppColor.textPrimary), textAlign: TextAlign.center);
+    return Text(speechText, style: tsBodyLargeMedium(AppColor.textPrimary), textAlign: TextAlign.center);
+  }
+
+  Widget _buildWaveBars() {
+    return AnimatedBuilder(
+      animation: _waveAnimation,
+      builder: (context, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(5, (index) {
+            final delay = index * 0.2;
+            final animValue = (_waveAnimation.value - delay).clamp(0.0, 1.0);
+            final scale = _isRecording
+                ? 1 + (0.5 * (1 - (animValue - 0.5).abs() * 2))
+                : 1.0;
+            return Transform.scale(
+              scale: scale,
+              child: Container(
+                width: 6,
+                height: 20.0,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                  color: AppColor.primary,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 
   Widget _buildMicrophoneButton() {
@@ -468,26 +453,43 @@ class _ExerciseLevelPageState extends State<ExerciseLevelPage> with SingleTicker
     );
   }
 
+  Widget _buildAnalyzingText() {
+    return Text(
+      'Menganalisa...',
+      style: tsBodyLargeMedium(AppColor.textSecondary),
+      textAlign: TextAlign.center,
+    );
+  }
+
   Widget _buildSuccessContainer({required VoidCallback onNext}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.green.shade100,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green.shade400),
+        border: Border.all(color: AppColor.primary),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
-            Icon(Icons.check_circle, color: Colors.green.shade600),
+            Icon(Icons.check_circle, color: AppColor.primary,),
             const SizedBox(width: 8),
-            Text('Bagus! Kamu berhasil.', style: tsBodyMediumMedium(Colors.green.shade800)),
+            Text('Jawaban benar!', style: tsBodyMediumRegular(AppColor.primary)),
           ]),
-          ElevatedButton(
-            onPressed: onNext,
-            style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
-            child: const Text('Lanjut'),
+          InkWell(
+            onTap: onNext,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColor.primary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Lanjut',
+                style: tsBodySmallRegular(AppColor.white),
+              ),
+            ),
           ),
         ],
       ),
